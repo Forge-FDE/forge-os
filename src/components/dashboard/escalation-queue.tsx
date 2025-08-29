@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import {
   Table,
@@ -18,12 +17,13 @@ import { EscalationBadge } from "@/components/ui/escalation-badge"
 import { PhaseIndicator } from "@/components/ui/phase-indicator"
 import { ExternalLink } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
+import { Phase } from "@prisma/client"
 
 interface EscalationQueueProps {
   accounts: Array<{
     id: string
     name: string
-    phase: any
+    phase: Phase
     sto: { name: string | null; email: string }
     dsltDays: number
     sentiment: string | null

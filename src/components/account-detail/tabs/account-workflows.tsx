@@ -2,12 +2,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { PhaseIndicator } from "@/components/ui/phase-indicator"
 import { Progress } from "@/components/ui/progress"
+import { Phase } from "@prisma/client"
 
 interface AccountWorkflowsProps {
   workflows: Array<{
     id: string
     name: string
-    phase: any
+    phase: Phase
     ownerFde: { name: string | null; email: string } | null
     golden10: boolean
     accessReady: boolean

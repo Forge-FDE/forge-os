@@ -5,12 +5,13 @@ import { EscalationBadge } from "@/components/ui/escalation-badge"
 import { PhaseIndicator } from "@/components/ui/phase-indicator"
 import { formatDistanceToNow } from "date-fns"
 import { Building2, Calendar, User } from "lucide-react"
+import { Phase } from "@prisma/client"
 
 interface AccountHeaderProps {
   account: {
     name: string
     codename: string | null
-    phase: any
+    phase: Phase
     sto: {
       name: string | null
       email: string

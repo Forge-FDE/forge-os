@@ -21,7 +21,7 @@ export function PhaseIndicator({ phase, className, showLabel = true }: PhaseIndi
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div className="flex gap-1">
-        {Object.entries(phaseConfig).map(([key, val], index) => (
+        {Object.entries(phaseConfig).map(([key, val]) => (
           <div
             key={key}
             className={cn(

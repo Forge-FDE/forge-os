@@ -17,13 +17,14 @@ import { EscalationBadge } from "@/components/ui/escalation-badge"
 import { PhaseIndicator } from "@/components/ui/phase-indicator"
 import { Sparkline } from "@/components/charts/sparkline"
 import { ExternalLink } from "lucide-react"
+import { Phase } from "@prisma/client"
 
 interface AccountsTableProps {
   accounts: Array<{
     id: string
     name: string
     codename: string | null
-    phase: any
+    phase: Phase
     sto: {
       name: string | null
       email: string
@@ -37,7 +38,7 @@ interface AccountsTableProps {
     automation7d: number
     blockersOpen: number
     dsltDays: number
-    actions: Array<any>
+    actions: Array<{ status: string; severity?: string }>
   }>
 }
 

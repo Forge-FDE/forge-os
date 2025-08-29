@@ -8,7 +8,13 @@ import { AccountStakeholders } from "./tabs/account-stakeholders"
 import { AccountHistory } from "./tabs/account-history"
 
 interface AccountTabsProps {
-  account: any // Full account with all relations
+  account: {
+    id: string
+    workflows: Array<{ id: string }>
+    actions: Array<{ status: string }>
+    stakeholders: Array<{ id: string }>
+    touches: Array<{ id: string }>
+  } & Record<string, unknown> // For additional properties
 }
 
 export function AccountTabs({ account }: AccountTabsProps) {
