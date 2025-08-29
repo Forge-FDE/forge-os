@@ -13,9 +13,14 @@ interface AccountHeaderProps {
     codename: string | null
     phase: Phase
     sto: {
+      id: string
       name: string | null
       email: string
-    }
+      role: string
+      createdAt: Date
+      emailVerified: Date | null
+      image: string | null
+    } | null
     sponsor: string | null
     champion: string | null
     sentiment: string | null
@@ -46,19 +51,21 @@ export function AccountHeader({ account }: AccountHeaderProps) {
       </div>
       
       <div className="flex flex-wrap gap-4">
-        <div className="flex items-center gap-2">
-          <Avatar className="h-8 w-8">
-            <AvatarFallback>
-              {account.sto.name?.[0] || account.sto.email[0].toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="text-sm font-medium">STO</p>
-            <p className="text-sm text-muted-foreground">
-              {account.sto.name || account.sto.email}
-            </p>
+        {account.sto && (
+          <div className="flex items-center gap-2">
+            <Avatar className="h-8 w-8">
+              <AvatarFallback>
+                {account.sto.name?.[0] || account.sto.email[0].toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium">STO</p>
+              <p className="text-sm text-muted-foreground">
+                {account.sto.name || account.sto.email}
+              </p>
+            </div>
           </div>
-        </div>
+        )}
         
         {account.sponsor && (
           <div className="flex items-center gap-2">

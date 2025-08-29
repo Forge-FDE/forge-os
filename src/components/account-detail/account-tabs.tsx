@@ -11,7 +11,15 @@ interface Workflow {
   id: string
   name: string
   phase: string
-  ownerFde?: { name: string | null; email: string }
+  ownerFde?: {
+    id: string
+    name: string | null
+    email: string
+    role: string
+    createdAt: Date
+    emailVerified: Date | null
+    image: string | null
+  } | null
 }
 
 interface Action {
@@ -27,7 +35,13 @@ interface Stakeholder {
   name: string
   email: string
   role: string
-  sentiments?: Array<{ sentiment: string; date: Date }>
+  sentiments: Array<{
+    id: string
+    sentiment: string
+    date: Date
+    accountId: string
+    stakeholderId: string
+  }>
 }
 
 interface Touch {
@@ -43,6 +57,13 @@ interface AccountTabsProps {
     name: string
     codename: string | null
     phase: string
+    sponsor: string | null
+    champion: string | null
+    sentiment: string | null
+    dsltDays: number
+    nextGateDue: Date | null
+    escalationState: string
+    escalationScore: number
     volume7d: number
     revenue7d: number
     cost7d: number
@@ -52,6 +73,17 @@ interface AccountTabsProps {
     p95ms7d: number
     automation7d: number
     notes: string | null
+    blockersOpen: number
+    oldestBlockerAgeD: number
+    sto: {
+      id: string
+      name: string | null
+      email: string
+      role: string
+      createdAt: Date
+      emailVerified: Date | null
+      image: string | null
+    } | null
     workflows: Array<Workflow>
     actions: Array<Action>
     stakeholders: Array<Stakeholder>

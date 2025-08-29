@@ -40,7 +40,7 @@ function SignInForm() {
           description: "A magic link has been sent to your email address.",
         })
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "An unexpected error occurred. Please try again.",
