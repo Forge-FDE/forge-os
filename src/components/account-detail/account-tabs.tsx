@@ -46,7 +46,10 @@ interface AccountTabsProps {
     
     workflows: Array<{
       id: string
-      name: string | null
+      accountId: string
+      name: string
+      phase: string
+      ownerFdeId: string | null
       ownerFde?: {
         id: string
         name: string | null
@@ -56,14 +59,30 @@ interface AccountTabsProps {
         emailVerified: Date | null
         image: string | null
       } | null
+      golden10: boolean
+      accessReady: boolean
+      volume7d: number
+      qcPct7d: number
+      aht7d: number
+      p95ms7d: number
+      automation7d: number
+      budgetUtil7d: number
     }>
     
     actions: Array<{
       id: string
-      status: string
-      severity: string
+      accountId: string
+      workflowId: string | null
       title: string
+      severity: string
+      status: string
+      responsible: string
+      dueDate: Date | null
       openedAt: Date
+      lastUpdate: Date
+      slackLink: string | null
+      docLink: string | null
+      ageD: number
     }>
     
     stakeholders: Array<{
@@ -84,9 +103,12 @@ interface AccountTabsProps {
     
     touches: Array<{
       id: string
-      type: string
+      accountId: string
+      workflowId: string | null
       touchedAt: Date
-      notes: string | null
+      actor: string
+      channel: string
+      summary: string | null
     }>
   }
 }
