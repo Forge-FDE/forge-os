@@ -1,0 +1,145 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Phase {
+  P0_ALIGN
+  P1_PILOT
+  P2_EXPANSION
+  P3_ENTERPRISE
+  P4_HANDOFF
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  name      String?
+  role      String     @default("viewer") // viewer|admin
+  accounts  Account[]  @relation("AccountSTO")
+  fdeOf     Workflow[] @relation("WorkflowFDE")
+  createdAt DateTime   @default(now())
+}
+
+model Account {
+  id               String                 @id @default(cuid())
+  name             String                 @unique
+  codename         String?
+  phase            Phase                  @default(P0_ALIGN)
+  stoId            String
+  sto              User                   @relation("AccountSTO", fields: [stoId], references: [id])
+  sponsor          String?
+  champion         String?
+  phaseStart       DateTime               @default(now())
+  nextGateDue      DateTime?
+  dsltDays         Int                    @default(0)
+  sentiment        String?                // R|Y|G
+  gateSlips        Int                    @default(0)
+  volume7d         Int                    @default(0)
+  revenue7d        Int                    @default(0)
+  cost7d           Int                    @default(0)
+  gm7d             Float                  @default(0)
+  qcPct7d          Float                  @default(0)
+  aht7d            Float                  @default(0)
+  p95ms7d          Int                    @default(0)
+  automation7d     Float                  @default(0)
+  blockersOpen     Int                    @default(0)
+  oldestBlockerAgeD Int                   @default(0)
+  escalationScore  Int                    @default(0)
+  escalationState  String                 @default("none") // none|watch|escalate
+  notes            String?
+  workflows        Workflow[]
+  actions          Action[]
+  touches          Touch[]
+  stakeholders     Stakeholder[]
+  sentiments       StakeholderSentiment[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+}
+
+model Workflow {
+  id            String    @id @default(cuid())
+  accountId     String
+  account       Account   @relation(fields: [accountId], references: [id])
+  name          String
+  phase         Phase
+  ownerFdeId    String?
+  ownerFde      User?     @relation("WorkflowFDE", fields: [ownerFdeId], references: [id])
+  golden10      Boolean   @default(false)
+  accessReady   Boolean   @default(false)
+  volume7d      Int       @default(0)
+  qcPct7d       Float     @default(0)
+  aht7d         Float     @default(0)
+  p95ms7d       Int       @default(0)
+  automation7d  Float     @default(0)
+  budgetUtil7d  Float     @default(0)
+  nextMilestone String?
+  dueDate       DateTime?
+  wgSentiment   String?   // R|Y|G
+  statusNote    String?
+  actions       Action[]
+}
+
+model Action {
+  id          String    @id @default(cuid())
+  accountId   String
+  workflowId  String?
+  title       String
+  severity    String    // sev-0|sev-1|sev-2
+  status      String    // open|at_risk|closed
+  responsible String    // R
+  dueDate     DateTime?
+  openedAt    DateTime  @default(now())
+  lastUpdate  DateTime  @default(now())
+  slackLink   String?
+  docLink     String?
+  ageD        Int       @default(0)
+  account     Account   @relation(fields: [accountId], references: [id])
+  workflow    Workflow? @relation(fields: [workflowId], references: [id])
+}
+
+model Touch {
+  id         String    @id @default(cuid())
+  accountId  String
+  workflowId String?
+  touchedAt  DateTime
+  actor      String
+  channel    String    // exec|team|email|call
+  summary    String?
+  account    Account   @relation(fields: [accountId], references: [id])
+}
+
+model Stakeholder {
+  id         String                 @id @default(cuid())
+  accountId  String
+  name       String
+  role       String                 // sponsor|champion|security|ops|it|procurement
+  contact    String?
+  account    Account                @relation(fields: [accountId], references: [id])
+  sentiments StakeholderSentiment[]
+}
+
+model StakeholderSentiment {
+  id            String      @id @default(cuid())
+  stakeholderId String
+  accountId     String
+  date          DateTime    @default(now())
+  sentiment     String      // R|Y|G
+  notes         String?
+  stakeholder   Stakeholder @relation(fields: [stakeholderId], references: [id])
+  account       Account     @relation(fields: [accountId], references: [id])
+}
+
+model IngestionSource {
+  id            String    @id @default(cuid())
+  accountName   String    // must match Account.name
+  spreadsheetId String    // google sheet id
+  tab           String?   // optional specific tab
+  active        Boolean   @default(true)
+  lastRunAt     DateTime?
+  lastStatus    String?
+}
