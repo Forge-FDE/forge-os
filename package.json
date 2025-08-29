@@ -12,7 +12,8 @@
     "prisma:studio": "prisma studio",
     "postinstall": "prisma generate",
     "ingest": "tsx scripts/ingest.ts",
-    "ingest:dev": "dotenv -e .env.local -- tsx scripts/ingest.ts"
+    "ingest:dev": "dotenv -e .env.local -- tsx scripts/ingest.ts",
+    "setup-db": "tsx scripts/setup-production-db.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
