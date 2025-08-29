@@ -9,25 +9,38 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   // Skip adapter for now until database is set up
   ...(process.env.NODE_ENV === 'production' ? {} : { adapter: PrismaAdapter(prisma) }),
   
-  providers: [
-    // Simplified email provider - disable actual sending for now
-    EmailProvider({
-      server: process.env.NODE_ENV === 'production' ? undefined : {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: process.env.EMAIL_SERVER_PORT,
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD
+  providers: process.env.NODE_ENV === 'production' 
+    ? [
+        // Custom email provider for production - no nodemailer dependency
+        {
+          id: "email",
+          name: "Email", 
+          type: "email",
+          
+          server: {},
+          from: process.env.EMAIL_FROM || "noreply@forge-os.com",
+          
+          // Just log the magic link - no actual sending
+          sendVerificationRequest: async ({ identifier, url }) => {
+            console.log(`🔗 Magic link for ${identifier}: ${url}`)
+            return Promise.resolve()
+          }
         }
-      },
-      from: process.env.EMAIL_FROM || "noreply@forge-os.com",
-      // For testing - just log the magic link instead of sending
-      sendVerificationRequest: async ({ identifier, url, provider }) => {
-        console.log(`Magic link for ${identifier}: ${url}`)
-        // In production, we'll just log - no actual email sending
-      },
-    })
-  ],
+      ]
+    : [
+        // Full EmailProvider for development
+        EmailProvider({
+          server: {
+            host: process.env.EMAIL_SERVER_HOST,
+            port: process.env.EMAIL_SERVER_PORT,
+            auth: {
+              user: process.env.EMAIL_SERVER_USER,
+              pass: process.env.EMAIL_SERVER_PASSWORD
+            }
+          },
+          from: process.env.EMAIL_FROM || "noreply@forge-os.com",
+        })
+      ],
   callbacks: {
     async session({ session, user }) {
       if (session.user) {
