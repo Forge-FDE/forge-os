@@ -6,8 +6,8 @@ import { prisma } from "@/lib/prisma"
 const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(',') || []
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  // Skip adapter for now until database is set up
-  ...(process.env.NODE_ENV === 'production' ? {} : { adapter: PrismaAdapter(prisma) }),
+  // Prisma adapter required for email authentication
+  adapter: PrismaAdapter(prisma),
   
   providers: process.env.NODE_ENV === 'production' 
     ? [
