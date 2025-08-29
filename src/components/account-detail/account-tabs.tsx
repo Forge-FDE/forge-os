@@ -6,6 +6,7 @@ import { AccountWorkflows } from "./tabs/account-workflows"
 import { AccountActions } from "./tabs/account-actions"
 import { AccountStakeholders } from "./tabs/account-stakeholders"
 import { AccountHistory } from "./tabs/account-history"
+import { Phase } from "@prisma/client"
 
 interface AccountTabsProps {
   account: {
@@ -13,7 +14,7 @@ interface AccountTabsProps {
     id: string
     name: string
     codename: string | null
-    phase: string
+    phase: Phase
     sponsor: string | null
     champion: string | null
     sentiment: string | null
@@ -48,7 +49,7 @@ interface AccountTabsProps {
       id: string
       accountId: string
       name: string
-      phase: string
+      phase: Phase
       ownerFdeId: string | null
       ownerFde?: {
         id: string
