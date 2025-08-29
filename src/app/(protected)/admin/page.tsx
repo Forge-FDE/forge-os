@@ -1,7 +1,9 @@
 import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
+import { prisma } from "@/lib/prisma"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { IngestionTrigger } from "@/components/admin/ingestion-trigger"
+import { IngestionSourcesList } from "@/components/admin/ingestion-sources-list"
 
 export default async function AdminPage() {
   const session = await auth()
@@ -9,7 +11,13 @@ export default async function AdminPage() {
   if (session?.user?.role !== "admin") {
     redirect("/")
   }
-
+  
+  const sources = await prisma.ingestionSource.findMany({
+    orderBy: { lastRunAt: 'desc' },
+  })
+  
+  const lastRun = sources[0]?.lastRunAt
+  
   return (
     <div className="space-y-6">
       <div>
@@ -22,23 +30,6 @@ export default async function AdminPage() {
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Ingestion Sources</CardTitle>
-            <CardDescription>
-              Manage Google Sheets data sources
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              No ingestion sources configured
-            </p>
-            <Button variant="outline" size="sm">
-              Add Source
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
             <CardTitle>Manual Ingestion</CardTitle>
             <CardDescription>
               Trigger data import manually
@@ -46,53 +37,21 @@ export default async function AdminPage() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              Run the data ingestion process on demand
+              Last run: {lastRun ? new Date(lastRun).toLocaleString() : 'Never'}
             </p>
-            <Button variant="outline" size="sm">
-              Run Ingestion
-            </Button>
+            <IngestionTrigger />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>User Management</CardTitle>
+            <CardTitle>Ingestion Sources</CardTitle>
             <CardDescription>
-              Manage user roles and permissions
+              Configured data sources
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              {session?.user?.email} (Admin)
-            </p>
-            <Button variant="outline" size="sm">
-              Manage Users
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>System Status</CardTitle>
-            <CardDescription>
-              Current system health
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Database</span>
-                <span className="text-green-600">Connected</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Auth</span>
-                <span className="text-green-600">Active</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Last Ingestion</span>
-                <span>Never</span>
-              </div>
-            </div>
+            <IngestionSourcesList sources={sources} />
           </CardContent>
         </Card>
       </div>

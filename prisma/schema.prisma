@@ -82,6 +82,8 @@ model Workflow {
   wgSentiment   String?   // R|Y|G
   statusNote    String?
   actions       Action[]
+
+  @@unique([accountId, name])
 }
 
 model Action {
@@ -100,6 +102,8 @@ model Action {
   ageD        Int       @default(0)
   account     Account   @relation(fields: [accountId], references: [id])
   workflow    Workflow? @relation(fields: [workflowId], references: [id])
+
+  @@unique([accountId, title, openedAt])
 }
 
 model Touch {
@@ -111,6 +115,8 @@ model Touch {
   channel    String    // exec|team|email|call
   summary    String?
   account    Account   @relation(fields: [accountId], references: [id])
+
+  @@unique([accountId, touchedAt, actor, channel])
 }
 
 model Stakeholder {
@@ -142,4 +148,6 @@ model IngestionSource {
   active        Boolean   @default(true)
   lastRunAt     DateTime?
   lastStatus    String?
+
+  @@unique([spreadsheetId])
 }

@@ -10,7 +10,9 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "ingest": "tsx scripts/ingest.ts",
+    "ingest:dev": "dotenv -e .env.local -- tsx scripts/ingest.ts"
   },
   "prisma": {
     "seed": "node prisma/seed.js"
@@ -24,12 +26,14 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
-    "@types/node": "24.3.0",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
     "autoprefixer": "^10.4.21",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "csv-parse": "^6.1.0",
+    "date-fns": "^4.1.0",
+    "googleapis": "^159.0.0",
     "lucide-react": "^0.542.0",
     "next": "15.5.2",
     "next-auth": "^5.0.0-beta.29",
@@ -46,6 +50,8 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@types/node": "^24.3.0",
+    "dotenv-cli": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "tsx": "^4.20.5"
