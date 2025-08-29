@@ -1,16 +1,16 @@
-import NextAuth from "next-auth"
+import "next-auth"
 
 declare module "next-auth" {
   interface Session {
     user: {
       id: string
-      email?: string | null
+      email: string
       name?: string | null
-      role: string
+      role: "viewer" | "admin"
     }
   }
 
   interface User {
-    role: string
+    role?: string
   }
 }
