@@ -33,5 +33,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: '/auth/signin',
     error: '/auth/error',
     verifyRequest: '/auth/verify-request',
-  }
+  },
+  trustHost: true, // Force trust all hosts in production
+  debug: process.env.NODE_ENV === 'development',
 })
