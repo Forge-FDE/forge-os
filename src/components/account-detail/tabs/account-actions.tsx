@@ -13,10 +13,9 @@ interface AccountActionsProps {
     openedAt: Date
     ageD: number
   }>
-  accountId: string
 }
 
-export function AccountActions({ actions, accountId }: AccountActionsProps) {
+export function AccountActions({ actions }: AccountActionsProps) {
   const openActions = actions.filter(a => a.status !== 'closed')
   
   if (openActions.length === 0) {

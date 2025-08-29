@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { StatusChip } from "@/components/ui/status-chip"
@@ -14,10 +14,9 @@ interface AccountStakeholdersProps {
       date: Date
     }>
   }>
-  accountId: string
 }
 
-export function AccountStakeholders({ stakeholders, accountId }: AccountStakeholdersProps) {
+export function AccountStakeholders({ stakeholders }: AccountStakeholdersProps) {
   if (stakeholders.length === 0) {
     return (
       <Card>

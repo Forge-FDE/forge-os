@@ -26,7 +26,7 @@ export function AccountTabs({ account }: AccountTabsProps) {
           Workflows ({account.workflows.length})
         </TabsTrigger>
         <TabsTrigger value="actions">
-          Actions ({account.actions.filter((a: any) => a.status !== 'closed').length})
+          Actions ({account.actions.filter((a) => a.status !== 'closed').length})
         </TabsTrigger>
         <TabsTrigger value="stakeholders">
           Stakeholders ({account.stakeholders.length})
@@ -43,13 +43,12 @@ export function AccountTabs({ account }: AccountTabsProps) {
       </TabsContent>
       
       <TabsContent value="actions">
-        <AccountActions actions={account.actions} accountId={account.id} />
+        <AccountActions actions={account.actions} />
       </TabsContent>
       
       <TabsContent value="stakeholders">
         <AccountStakeholders 
           stakeholders={account.stakeholders} 
-          accountId={account.id} 
         />
       </TabsContent>
       
