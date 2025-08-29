@@ -4,12 +4,13 @@ import { AccountHeader } from "@/components/account-detail/account-header"
 import { AccountTabs } from "@/components/account-detail/account-tabs"
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 export default async function AccountDetailPage({ params }: PageProps) {
+  const { id } = await params
   const account = await prisma.account.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       sto: true,
       workflows: {

@@ -6,25 +6,26 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     phase?: string
     sentiment?: string
     sto?: string
     state?: string
     search?: string
-  }
+  }>
 }
 
 export default async function AccountsPage({ searchParams }: PageProps) {
+  const params = await searchParams
   const filters = {
-    ...(searchParams.phase && { phase: searchParams.phase }),
-    ...(searchParams.sentiment && { sentiment: searchParams.sentiment }),
-    ...(searchParams.sto && { stoId: searchParams.sto }),
-    ...(searchParams.state && { escalationState: searchParams.state }),
-    ...(searchParams.search && {
+    ...(params.phase && { phase: params.phase }),
+    ...(params.sentiment && { sentiment: params.sentiment }),
+    ...(params.sto && { stoId: params.sto }),
+    ...(params.state && { escalationState: params.state }),
+    ...(params.search && {
       OR: [
-        { name: { contains: searchParams.search, mode: 'insensitive' as const } },
-        { codename: { contains: searchParams.search, mode: 'insensitive' as const } },
+        { name: { contains: params.search, mode: 'insensitive' as const } },
+        { codename: { contains: params.search, mode: 'insensitive' as const } },
       ],
     }),
   }
