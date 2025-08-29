@@ -1,6 +1,52 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Suspense } from "react"
+import { prisma } from "@/lib/prisma"
+import { AccountsTable } from "@/components/accounts/accounts-table"
+import { AccountsFilters } from "@/components/accounts/accounts-filters"
+import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
-export default function AccountsPage() {
+interface PageProps {
+  searchParams: {
+    phase?: string
+    sentiment?: string
+    sto?: string
+    state?: string
+    search?: string
+  }
+}
+
+export default async function AccountsPage({ searchParams }: PageProps) {
+  const filters = {
+    ...(searchParams.phase && { phase: searchParams.phase }),
+    ...(searchParams.sentiment && { sentiment: searchParams.sentiment }),
+    ...(searchParams.sto && { stoId: searchParams.sto }),
+    ...(searchParams.state && { escalationState: searchParams.state }),
+    ...(searchParams.search && {
+      OR: [
+        { name: { contains: searchParams.search, mode: 'insensitive' as const } },
+        { codename: { contains: searchParams.search, mode: 'insensitive' as const } },
+      ],
+    }),
+  }
+  
+  const [accounts, stos] = await Promise.all([
+    prisma.account.findMany({
+      where: filters,
+      include: {
+        sto: true,
+        workflows: true,
+        actions: {
+          where: { status: { not: 'closed' } },
+        },
+      },
+      orderBy: { escalationScore: 'desc' },
+    }),
+    prisma.user.findMany({
+      where: { accounts: { some: {} } },
+      orderBy: { name: 'asc' },
+    }),
+  ])
+  
   return (
     <div className="space-y-6">
       <div>
@@ -10,19 +56,25 @@ export default function AccountsPage() {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Account List</CardTitle>
-          <CardDescription>
-            All accounts in the system
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No accounts found. Accounts will appear here after data ingestion.
-          </p>
-        </CardContent>
-      </Card>
+      <AccountsFilters stos={stos} />
+      
+      <Suspense fallback={<AccountsTableSkeleton />}>
+        <AccountsTable accounts={accounts} />
+      </Suspense>
     </div>
+  )
+}
+
+function AccountsTableSkeleton() {
+  return (
+    <Card>
+      <CardContent className="p-0">
+        <div className="space-y-3 p-4">
+          {[...Array(5)].map((_, i) => (
+            <Skeleton key={i} className="h-12 w-full" />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   )
 }
