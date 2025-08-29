@@ -7,52 +7,9 @@ import { AccountActions } from "./tabs/account-actions"
 import { AccountStakeholders } from "./tabs/account-stakeholders"
 import { AccountHistory } from "./tabs/account-history"
 
-interface Workflow {
-  id: string
-  name: string
-  phase: string
-  ownerFde?: {
-    id: string
-    name: string | null
-    email: string
-    role: string
-    createdAt: Date
-    emailVerified: Date | null
-    image: string | null
-  } | null
-}
-
-interface Action {
-  id: string
-  status: string
-  severity: string
-  title: string
-  openedAt: Date
-}
-
-interface Stakeholder {
-  id: string
-  name: string
-  email: string
-  role: string
-  sentiments: Array<{
-    id: string
-    sentiment: string
-    date: Date
-    accountId: string
-    stakeholderId: string
-  }>
-}
-
-interface Touch {
-  id: string
-  type: string
-  touchedAt: Date
-  notes: string | null
-}
-
 interface AccountTabsProps {
   account: {
+    // Core Account fields from Prisma schema
     id: string
     name: string
     codename: string | null
@@ -72,9 +29,11 @@ interface AccountTabsProps {
     aht7d: number
     p95ms7d: number
     automation7d: number
-    notes: string | null
     blockersOpen: number
     oldestBlockerAgeD: number
+    notes: string | null
+    
+    // Relations exactly as returned by Prisma query
     sto: {
       id: string
       name: string | null
@@ -84,10 +43,51 @@ interface AccountTabsProps {
       emailVerified: Date | null
       image: string | null
     } | null
-    workflows: Array<Workflow>
-    actions: Array<Action>
-    stakeholders: Array<Stakeholder>
-    touches: Array<Touch>
+    
+    workflows: Array<{
+      id: string
+      name: string | null
+      ownerFde?: {
+        id: string
+        name: string | null
+        email: string
+        role: string
+        createdAt: Date
+        emailVerified: Date | null
+        image: string | null
+      } | null
+    }>
+    
+    actions: Array<{
+      id: string
+      status: string
+      severity: string
+      title: string
+      openedAt: Date
+    }>
+    
+    stakeholders: Array<{
+      id: string
+      name: string
+      role: string
+      contact: string | null
+      accountId: string
+      sentiments: Array<{
+        id: string
+        sentiment: string
+        notes: string | null
+        date: Date
+        accountId: string
+        stakeholderId: string
+      }>
+    }>
+    
+    touches: Array<{
+      id: string
+      type: string
+      touchedAt: Date
+      notes: string | null
+    }>
   }
 }
 
