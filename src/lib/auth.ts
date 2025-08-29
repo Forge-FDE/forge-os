@@ -43,10 +43,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     verifyRequest: '/auth/verify-request',
   },
   trustHost: true,
-  debug: process.env.NODE_ENV === 'development',
-  
-  // Add explicit host configuration
-  experimental: {
-    trustHost: true
-  }
+  debug: process.env.NODE_ENV === 'development'
 })
