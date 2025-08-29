@@ -67,6 +67,10 @@ interface AccountTabsProps {
       p95ms7d: number
       automation7d: number
       budgetUtil7d: number
+      nextMilestone: string | null
+      dueDate: Date | null
+      wgSentiment: string | null
+      statusNote: string | null
     }>
     
     actions: Array<{
