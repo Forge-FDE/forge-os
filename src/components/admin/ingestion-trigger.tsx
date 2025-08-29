@@ -16,7 +16,7 @@ export function IngestionTrigger() {
       const response = await fetch('/api/ingest', {
         method: 'POST',
         headers: {
-          'x-etl-token': 'development-etl-token-change-in-production',
+          'x-etl-token': process.env.NEXT_PUBLIC_ETL_TOKEN || 'development-etl-token-change-in-production',
         },
       })
       
