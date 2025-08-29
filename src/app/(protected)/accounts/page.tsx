@@ -4,6 +4,7 @@ import { AccountsTable } from "@/components/accounts/accounts-table"
 import { AccountsFilters } from "@/components/accounts/accounts-filters"
 import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Phase } from "@prisma/client"
 
 interface PageProps {
   searchParams: Promise<{
@@ -17,8 +18,14 @@ interface PageProps {
 
 export default async function AccountsPage({ searchParams }: PageProps) {
   const params = await searchParams
+  
+  // Validate phase parameter
+  const isValidPhase = (phase: string): phase is Phase => {
+    return Object.values(Phase).includes(phase as Phase)
+  }
+  
   const filters = {
-    ...(params.phase && { phase: params.phase }),
+    ...(params.phase && isValidPhase(params.phase) && { phase: params.phase as Phase }),
     ...(params.sentiment && { sentiment: params.sentiment }),
     ...(params.sto && { stoId: params.sto }),
     ...(params.state && { escalationState: params.state }),
