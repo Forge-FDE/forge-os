@@ -1,4 +1,4 @@
-import { PrismaClient, Phase } from "@prisma/client"
+const { PrismaClient } = require("@prisma/client")
 
 const prisma = new PrismaClient()
 
@@ -20,7 +20,7 @@ async function main() {
     update: {},
     create: {
       email: "sto@forge-os.com",
-      name: "STO User",
+      name: "STO User", 
       role: "viewer",
     },
   })
