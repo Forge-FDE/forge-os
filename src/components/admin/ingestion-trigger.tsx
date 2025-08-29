@@ -34,7 +34,7 @@ export function IngestionTrigger() {
           variant: "destructive",
         })
       }
-    } catch (_error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to trigger ingestion",

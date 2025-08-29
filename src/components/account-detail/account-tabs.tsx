@@ -7,15 +7,55 @@ import { AccountActions } from "./tabs/account-actions"
 import { AccountStakeholders } from "./tabs/account-stakeholders"
 import { AccountHistory } from "./tabs/account-history"
 
+interface Workflow {
+  id: string
+  name: string
+  phase: string
+  ownerFde?: { name: string | null; email: string }
+}
+
+interface Action {
+  id: string
+  status: string
+  severity: string
+  title: string
+  openedAt: Date
+}
+
+interface Stakeholder {
+  id: string
+  name: string
+  email: string
+  role: string
+  sentiments?: Array<{ sentiment: string; date: Date }>
+}
+
+interface Touch {
+  id: string
+  type: string
+  touchedAt: Date
+  notes: string | null
+}
+
 interface AccountTabsProps {
   account: {
     id: string
-    workflows: Array<any>
-    actions: Array<any>
-    stakeholders: Array<any>
-    touches: Array<any>
-    // Allow any additional properties from the full account object
-    [key: string]: any
+    name: string
+    codename: string | null
+    phase: string
+    volume7d: number
+    revenue7d: number
+    cost7d: number
+    gm7d: number
+    qcPct7d: number
+    aht7d: number
+    p95ms7d: number
+    automation7d: number
+    notes: string | null
+    workflows: Array<Workflow>
+    actions: Array<Action>
+    stakeholders: Array<Stakeholder>
+    touches: Array<Touch>
   }
 }
 
