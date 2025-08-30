@@ -82,4 +82,4 @@ Supports two modes:
 
 ## Support
 
-For issues or questions, contact the development team.
+For issues or questions, contact mlunati@withforge.com
