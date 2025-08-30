@@ -9,7 +9,15 @@ interface AccountWorkflowsProps {
     id: string
     name: string
     phase: Phase
-    ownerFde: { name: string | null; email: string } | null
+    ownerFde?: {
+      id: string
+      name: string | null
+      email: string
+      role: string
+      createdAt: Date
+      emailVerified: Date | null
+      image: string | null
+    } | null
     golden10: boolean
     accessReady: boolean
     volume7d: number
