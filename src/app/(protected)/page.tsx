@@ -6,7 +6,7 @@ import { PaidAccountsV2 } from "@/components/dashboard/paid-accounts-v2"
 
 export default async function DashboardPage() {
   // Fetch dashboard data
-  const [accounts, owners, , metrics] = await Promise.all([
+  const [accounts, workflows, owners, , metrics] = await Promise.all([
     prisma.account.findMany({
       include: {
         sto: true,
@@ -15,6 +15,46 @@ export default async function DashboardPage() {
           select: { severity: true },
         },
       },
+    }),
+    // Fetch escalated workflows (from accounts with escalationState != 'none')
+    prisma.workflow.findMany({
+      where: {
+        account: {
+          escalationState: { not: 'none' }
+        }
+      },
+      include: {
+        account: {
+          select: {
+            id: true,
+            name: true,
+            escalationState: true,
+            escalationScore: true,
+            oldestBlockerAgeD: true,
+            nextGateDue: true,
+            sentiment: true
+          }
+        },
+        ownerFde: {
+          select: {
+            id: true,
+            name: true
+          }
+        },
+        actions: {
+          where: { status: { not: 'closed' } },
+          select: { 
+            id: true,
+            severity: true,
+            dueDate: true,
+            title: true
+          }
+        }
+      },
+      orderBy: [
+        { account: { escalationScore: 'desc' } },
+        { dueDate: 'asc' }
+      ]
     }),
     prisma.user.findMany({
       where: { accounts: { some: {} } },
@@ -83,8 +123,8 @@ export default async function DashboardPage() {
       }}>
         {/* Left Column */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <EscalationQueueV2 accounts={accounts} />
-          <PaidAccountsV2 accounts={accounts} />
+          <EscalationQueueV2 workflows={workflows} />
+          <PaidAccountsV2 accounts={accounts} title="All Accounts" />
         </div>
         
         {/* Right Column */}
