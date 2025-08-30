@@ -128,15 +128,9 @@ export function AccountsTable({ accounts }: AccountsTableProps) {
                   </span>
                 </TableCell>
                 <TableCell className="w-24">
-                  <Sparkline 
-                    data={[
-                      (account.volume7d || 0) * 0.8,
-                      (account.volume7d || 0) * 0.9,
-                      (account.volume7d || 0) * 0.95,
-                      (account.volume7d || 0),
-                    ]}
-                    height={30}
-                  />
+                  <div className="text-xs text-muted-foreground">
+                    Chart
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Button asChild size="sm" variant="ghost">
