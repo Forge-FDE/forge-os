@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge"
 import { StatusChip } from "@/components/ui/status-chip"
 import { EscalationBadge } from "@/components/ui/escalation-badge"
 import { PhaseIndicator } from "@/components/ui/phase-indicator"
-import { Sparkline } from "@/components/charts/sparkline"
+// import { Sparkline } from "@/components/charts/sparkline" // Temporarily disabled for debugging
 import { ExternalLink } from "lucide-react"
 import { Phase } from "@prisma/client"
 
