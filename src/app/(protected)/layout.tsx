@@ -25,7 +25,9 @@ export default async function ProtectedLayout({
           marginLeft: '256px', // Offset by sidebar width
           minHeight: '100vh',
           display: 'flex',
-          flexDirection: 'column'
+          flexDirection: 'column',
+          position: 'relative',
+          top: '0'  // Ensure it starts at the top
         }}
       >
         <TopNav user={session.user} />
@@ -33,14 +35,16 @@ export default async function ProtectedLayout({
           style={{ 
             flex: '1',
             backgroundColor: '#f9fafb',
-            overflow: 'auto'
+            overflow: 'auto',
+            position: 'relative'
           }}
         >
           <div 
             style={{ 
               maxWidth: '1280px',
               margin: '0 auto',
-              padding: '32px 24px'
+              padding: '32px 24px',
+              minHeight: 'calc(100vh - 64px)' // Account for top nav height
             }}
           >
             {children}

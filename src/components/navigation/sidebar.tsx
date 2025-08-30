@@ -35,18 +35,37 @@ export function Sidebar() {
       }}
     >
       {/* Logo */}
-      <div className="flex h-16 items-center px-6 border-b border-gray-700" style={{ borderBottom: '1px solid #374151' }}>
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded bg-orange-500">
-            <span className="text-white font-bold">🔥</span>
+      <div style={{ 
+        display: 'flex', 
+        height: '64px', 
+        alignItems: 'center', 
+        padding: '0 24px', 
+        borderBottom: '1px solid #374151' 
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{
+            display: 'flex',
+            width: '32px',
+            height: '32px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '6px',
+            backgroundColor: '#f97316'
+          }}>
+            <span style={{ color: 'white', fontWeight: 'bold', fontSize: '18px' }}>🔥</span>
           </div>
-          <span className="text-xl font-bold text-white">FORGE</span>
+          <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'white' }}>FORGE</span>
         </div>
       </div>
       
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4" style={{ flex: '1' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+      <nav style={{ 
+        flex: '1', 
+        padding: '24px 16px',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {navigation.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href
@@ -55,21 +74,34 @@ export function Sidebar() {
               <Link
                 key={item.name}
                 href={item.href}
-                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
-                  padding: '8px 12px',
+                  padding: '12px 16px',
                   borderRadius: '8px',
                   fontSize: '14px',
                   fontWeight: '500',
                   textDecoration: 'none',
                   backgroundColor: isActive ? '#374151' : 'transparent',
                   color: isActive ? '#ffffff' : '#9ca3af',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = '#374151';
+                    e.currentTarget.style.color = '#ffffff';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = '#9ca3af';
+                  }
                 }}
               >
-                <Icon style={{ width: '20px', height: '20px' }} />
+                <Icon style={{ width: '20px', height: '20px', flexShrink: '0' }} />
                 {item.name}
               </Link>
             )
@@ -79,30 +111,50 @@ export function Sidebar() {
       
       {/* User */}
       <div 
-        className="border-t p-4" 
         style={{ 
           borderTop: '1px solid #374151',
-          padding: '16px' 
+          padding: '20px 24px',
+          marginTop: 'auto'
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div 
             style={{
-              width: '32px',
-              height: '32px',
+              width: '36px',
+              height: '36px',
               borderRadius: '50%',
               backgroundColor: '#4b5563',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'white'
+              color: 'white',
+              flexShrink: '0'
             }}
           >
-            <User style={{ width: '16px', height: '16px' }} />
+            <User style={{ width: '18px', height: '18px' }} />
           </div>
-          <div style={{ fontSize: '14px' }}>
-            <div style={{ color: 'white' }}>User</div>
-            <div style={{ color: '#9ca3af', fontSize: '12px' }}>user@forge.com</div>
+          <div style={{ fontSize: '14px', minWidth: '0', flex: '1' }}>
+            <div style={{ 
+              color: 'white', 
+              fontWeight: '500', 
+              lineHeight: '1.2',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}>
+              User
+            </div>
+            <div style={{ 
+              color: '#9ca3af', 
+              fontSize: '12px', 
+              lineHeight: '1.2',
+              marginTop: '2px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap'
+            }}>
+              user@forge.com
+            </div>
           </div>
         </div>
       </div>
