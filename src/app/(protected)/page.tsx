@@ -1,15 +1,12 @@
-import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
-import { KPICard } from "@/components/ui/kpi-card"
-import { EscalationQueue } from "@/components/dashboard/escalation-queue"
-import { OwnerLoad } from "@/components/dashboard/owner-load"
-import { PaidAccounts } from "@/components/dashboard/paid-accounts"
+import { MetricCard } from "@/components/dashboard/metric-card"
+import { EscalationQueueV2 } from "@/components/dashboard/escalation-queue-v2"
+import { OwnerLoadV2 } from "@/components/dashboard/owner-load-v2"
+import { PaidAccountsV2 } from "@/components/dashboard/paid-accounts-v2"
 
 export default async function DashboardPage() {
-  const session = await auth()
-  
   // Fetch dashboard data
-  const [accounts, owners, openActions, metrics] = await Promise.all([
+  const [accounts, owners, , metrics] = await Promise.all([
     prisma.account.findMany({
       include: {
         sto: true,
@@ -38,61 +35,58 @@ export default async function DashboardPage() {
       },
       _avg: {
         qcPct7d: true,
-        automation7d: true,
+        aht7d: true,
       },
     }),
   ])
   
   const escalatedCount = accounts.filter(a => a.escalationState !== 'none').length
   const totalRevenue = metrics._sum.revenue7d || 0
-  const totalCost = metrics._sum.cost7d || 0
-  const totalGM = totalRevenue > 0 ? ((totalRevenue - totalCost) / totalRevenue) * 100 : 0
+  const avgQC = metrics._avg.qcPct7d || 0
+  const avgAHT = metrics._avg.aht7d || 0
   
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome back, {session?.user?.email}
-        </p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-        <KPICard
-          title="Total Accounts"
+      {/* Metrics Row */}
+      <div className="grid grid-cols-5 gap-4">
+        <MetricCard
+          title="Active Accounts"
           value={accounts.length}
-          description="Active accounts"
         />
-        <KPICard
-          title="Open Actions"
-          value={openActions}
-          description="Requiring attention"
-          deltaType={openActions > 10 ? "negative" : "neutral"}
-        />
-        <KPICard
+        <MetricCard
           title="Escalations"
           value={escalatedCount}
-          description="At risk accounts"
-          deltaType={escalatedCount > 0 ? "negative" : "positive"}
         />
-        <KPICard
-          title="Weekly Revenue"
-          value={`$${(totalRevenue / 1000).toFixed(1)}k`}
-          description="Last 7 days"
+        <MetricCard
+          title="Revenue 7d"
+          value={`$${(totalRevenue / 1000).toFixed(0)}k`}
         />
-        <KPICard
-          title="Gross Margin"
-          value={`${totalGM.toFixed(1)}%`}
-          description="Last 7 days"
-          deltaType={totalGM > 30 ? "positive" : "negative"}
+        <MetricCard
+          title="Avg QC"
+          value={`${(avgQC * 100).toFixed(0)}%`}
+        />
+        <MetricCard
+          title="Avg AHT"
+          value={`${avgAHT.toFixed(1)}d`}
         />
       </div>
 
-      <EscalationQueue accounts={accounts} />
-      
-      <div className="grid gap-6 lg:grid-cols-2">
-        <OwnerLoad data={owners} />
-        <PaidAccounts accounts={accounts} />
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-12 gap-6">
+        {/* Escalation Queue - Left Column */}
+        <div className="col-span-8 space-y-6">
+          <EscalationQueueV2 accounts={accounts} />
+          <PaidAccountsV2 accounts={accounts} />
+        </div>
+        
+        {/* Right Column */}
+        <div className="col-span-4 space-y-6">
+          <OwnerLoadV2 data={owners} />
+          <PaidAccountsV2 
+            accounts={accounts.filter(a => a.revenue7d > 0)} 
+            compact={true}
+          />
+        </div>
       </div>
     </div>
   )
