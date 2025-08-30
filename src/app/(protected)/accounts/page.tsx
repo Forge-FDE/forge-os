@@ -64,7 +64,9 @@ export default async function AccountsPage({ searchParams }: PageProps) {
         </p>
       </div>
 
-      <AccountsFilters stos={stos} />
+      <Suspense fallback={<div className="h-16 flex items-center justify-center">Loading filters...</div>}>
+        <AccountsFilters stos={stos} />
+      </Suspense>
       
       <Suspense fallback={<AccountsTableSkeleton />}>
         <AccountsTable accounts={accounts} />
