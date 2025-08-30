@@ -12,22 +12,51 @@ interface TopNavProps {
 
 export function TopNav({ user }: TopNavProps) {
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h1 className="text-lg font-semibold text-gray-900">Dashboard</h1>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="text-sm">
-            <div className="font-medium text-gray-900">{user.name || 'User'}</div>
-            <div className="text-gray-500">{user.email}</div>
+    <header 
+      style={{
+        backgroundColor: 'white',
+        borderBottom: '1px solid #e5e7eb',
+        padding: '16px 24px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <h1 style={{ 
+          fontSize: '18px', 
+          fontWeight: '600', 
+          color: '#111827',
+          margin: '0'
+        }}>
+          Dashboard
+        </h1>
+      </div>
+      
+      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ fontSize: '14px', textAlign: 'right' }}>
+          <div style={{ fontWeight: '500', color: '#111827' }}>
+            {user.name || 'User'}
           </div>
-          <Avatar className="h-8 w-8">
-            <AvatarFallback>
-              {user.name?.[0] || user.email[0].toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <div style={{ color: '#6b7280', fontSize: '12px' }}>
+            {user.email}
+          </div>
+        </div>
+        <div
+          style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            backgroundColor: '#f3f4f6',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '14px',
+            fontWeight: '500',
+            color: '#374151'
+          }}
+        >
+          {user.name?.[0] || user.email[0].toUpperCase()}
         </div>
       </div>
     </header>

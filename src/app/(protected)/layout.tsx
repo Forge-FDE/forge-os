@@ -15,13 +15,34 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <div className="flex h-screen w-screen bg-gray-50" style={{ minHeight: '100vh' }}>
-      {/* Force cache refresh v2 */}
+    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+      {/* Fixed Sidebar */}
       <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden min-w-0">
+      
+      {/* Main Content Area - offset by sidebar width */}
+      <div 
+        style={{ 
+          marginLeft: '256px', // Offset by sidebar width
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
         <TopNav user={session.user} />
-        <main className="flex-1 overflow-y-auto bg-gray-50">
-          <div className="max-w-7xl mx-auto px-6 py-8">
+        <main 
+          style={{ 
+            flex: '1',
+            backgroundColor: '#f9fafb',
+            overflow: 'auto'
+          }}
+        >
+          <div 
+            style={{ 
+              maxWidth: '1280px',
+              margin: '0 auto',
+              padding: '32px 24px'
+            }}
+          >
             {children}
           </div>
         </main>
