@@ -1,4 +1,5 @@
 import { Phase } from "@prisma/client"
+import Link from "next/link"
 
 interface EscalationQueueProps {
   accounts: Array<{
@@ -80,12 +81,21 @@ export function EscalationQueueV2({ accounts }: EscalationQueueProps) {
               const phaseStyle = phaseColors[account.phase as keyof typeof phaseColors] || phaseColors.P0_ALIGN
               
               return (
-                <tr key={account.id} style={{
-                  borderBottom: index < escalated.length - 1 ? '1px solid #f3f4f6' : 'none'
-                }}>
-                  <td style={cellStyle}>
-                    <span style={{ fontWeight: '500' }}>{account.name}</span>
-                  </td>
+                <Link key={account.id} href={`/accounts/${account.id}`} style={{ textDecoration: 'none' }}>
+                  <tr style={{
+                    borderBottom: index < escalated.length - 1 ? '1px solid #f3f4f6' : 'none',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f9fafb';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}>
+                    <td style={cellStyle}>
+                      <span style={{ fontWeight: '500', color: '#111827' }}>{account.name}</span>
+                    </td>
                   <td style={cellStyle}>
                     <span style={{
                       ...phaseStyle,
@@ -117,10 +127,11 @@ export function EscalationQueueV2({ accounts }: EscalationQueueProps) {
                   <td style={cellStyle}>
                     {account.nextGateDue ? `P${phaseNum}-1` : '-'}
                   </td>
-                  <td style={cellStyle}>
-                    {account.escalationScore}
-                  </td>
-                </tr>
+                    <td style={cellStyle}>
+                      {account.escalationScore}
+                    </td>
+                  </tr>
+                </Link>
               )
             })}
           </tbody>

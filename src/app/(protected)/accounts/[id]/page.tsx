@@ -41,7 +41,7 @@ export default async function AccountDetailPage({ params }: PageProps) {
   }
   
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <AccountHeader account={account} />
       <AccountTabs account={account} />
     </div>
