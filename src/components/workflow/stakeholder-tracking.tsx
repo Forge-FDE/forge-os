@@ -3,14 +3,12 @@
 import { useState } from "react"
 import { Users, MessageSquare, Calendar, TrendingUp, Mail, Phone } from "lucide-react"
 
-interface Communication {
+interface Touch {
   id: string
-  type: string
-  subject: string | null
-  content: string | null
-  timestamp: Date
-  fromUser: { name: string | null } | null
-  toUser: { name: string | null } | null
+  touchedAt: Date
+  actor: string
+  channel: string
+  summary: string | null
 }
 
 interface StakeholderTrackingProps {
@@ -19,21 +17,21 @@ interface StakeholderTrackingProps {
     account: {
       id: string
       sto: { name: string | null } | null
-      sponsor: { name: string | null } | null
-      champion: { name: string | null } | null
+      sponsor: string | null
+      champion: string | null
     }
   }
-  communications: Communication[]
+  touches: Touch[]
 }
 
-const communicationTypeIcons: Record<string, { icon: any, color: string }> = {
-  'EMAIL': { icon: Mail, color: '#2563eb' },
-  'CALL': { icon: Phone, color: '#059669' },
-  'MEETING': { icon: Users, color: '#7c3aed' },
-  'MESSAGE': { icon: MessageSquare, color: '#f59e0b' }
+const channelTypeIcons: Record<string, { icon: any, color: string }> = {
+  'email': { icon: Mail, color: '#2563eb' },
+  'call': { icon: Phone, color: '#059669' },
+  'team': { icon: Users, color: '#7c3aed' },
+  'exec': { icon: MessageSquare, color: '#f59e0b' }
 }
 
-export function StakeholderTracking({ workflow, communications }: StakeholderTrackingProps) {
+export function StakeholderTracking({ workflow, touches }: StakeholderTrackingProps) {
   const [selectedStakeholder, setSelectedStakeholder] = useState<string | null>(null)
 
   // Extract stakeholders
@@ -48,7 +46,7 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
     },
     {
       id: 'sponsor',
-      name: workflow.account.sponsor?.name || 'Unassigned',
+      name: workflow.account.sponsor || 'Unassigned',
       role: 'Sponsor',
       sentiment: 'POSITIVE',
       lastContact: null as Date | null,
@@ -56,7 +54,7 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
     },
     {
       id: 'champion',
-      name: workflow.account.champion?.name || 'Unassigned',
+      name: workflow.account.champion || 'Unassigned',
       role: 'Champion',
       sentiment: 'POSITIVE',
       lastContact: null as Date | null,
@@ -66,13 +64,13 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
 
   // Calculate communication stats for each stakeholder
   stakeholders.forEach(stakeholder => {
-    const stakeholderComms = communications.filter(comm => 
-      comm.fromUser?.name === stakeholder.name || comm.toUser?.name === stakeholder.name
+    const stakeholderTouches = touches.filter(touch => 
+      touch.actor === stakeholder.name
     )
     
-    stakeholder.communicationCount = stakeholderComms.length
-    if (stakeholderComms.length > 0) {
-      stakeholder.lastContact = new Date(Math.max(...stakeholderComms.map(c => new Date(c.timestamp).getTime())))
+    stakeholder.communicationCount = stakeholderTouches.length
+    if (stakeholderTouches.length > 0) {
+      stakeholder.lastContact = new Date(Math.max(...stakeholderTouches.map(t => new Date(t.touchedAt).getTime())))
     }
   })
 
@@ -100,15 +98,12 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
     })
   }
 
-  const filteredCommunications = selectedStakeholder
-    ? communications.filter(comm => {
+  const filteredTouches = selectedStakeholder
+    ? touches.filter(touch => {
         const stakeholder = stakeholders.find(s => s.id === selectedStakeholder)
-        return stakeholder && (
-          comm.fromUser?.name === stakeholder.name || 
-          comm.toUser?.name === stakeholder.name
-        )
+        return stakeholder && touch.actor === stakeholder.name
       })
-    : communications
+    : touches
 
   return (
     <div style={{
@@ -237,7 +232,7 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
               fontWeight: 'bold',
               color: '#111827'
             }}>
-              {communications.length}
+              {touches.length}
             </div>
             <div style={{
               fontSize: '11px',
@@ -295,7 +290,7 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
             border: '1px solid #e5e7eb',
             borderRadius: '6px'
           }}>
-            {filteredCommunications.length === 0 ? (
+            {filteredTouches.length === 0 ? (
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -307,19 +302,19 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
               </div>
             ) : (
               <div style={{ padding: '16px' }}>
-                {filteredCommunications.map((comm, index) => {
-                  const typeConfig = communicationTypeIcons[comm.type] || communicationTypeIcons['MESSAGE']
+                {filteredTouches.map((touch, index) => {
+                  const typeConfig = channelTypeIcons[touch.channel] || channelTypeIcons['team']
                   const IconComponent = typeConfig.icon
                   
                   return (
                     <div
-                      key={comm.id}
+                      key={touch.id}
                       style={{
                         display: 'flex',
                         gap: '12px',
                         paddingBottom: '16px',
-                        marginBottom: index < filteredCommunications.length - 1 ? '16px' : 0,
-                        borderBottom: index < filteredCommunications.length - 1 ? '1px solid #f3f4f6' : 'none'
+                        marginBottom: index < filteredTouches.length - 1 ? '16px' : 0,
+                        borderBottom: index < filteredTouches.length - 1 ? '1px solid #f3f4f6' : 'none'
                       }}
                     >
                       <div style={{
@@ -347,14 +342,14 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
                             fontWeight: '600',
                             color: '#111827'
                           }}>
-                            {comm.subject || `${comm.type.toLowerCase()} communication`}
+                            {touch.channel.toUpperCase()} Touch
                           </div>
                           <div style={{
                             fontSize: '11px',
                             color: '#6b7280',
                             whiteSpace: 'nowrap'
                           }}>
-                            {formatTimestamp(comm.timestamp)}
+                            {formatTimestamp(touch.touchedAt)}
                           </div>
                         </div>
                         
@@ -363,10 +358,10 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
                           color: '#6b7280',
                           marginBottom: '4px'
                         }}>
-                          {comm.fromUser?.name} → {comm.toUser?.name || 'Multiple recipients'}
+                          {touch.actor}
                         </div>
                         
-                        {comm.content && (
+                        {touch.summary && (
                           <div style={{
                             fontSize: '12px',
                             color: '#374151',
@@ -374,9 +369,9 @@ export function StakeholderTracking({ workflow, communications }: StakeholderTra
                             maxHeight: '40px',
                             overflow: 'hidden'
                           }}>
-                            {comm.content.length > 100 ? 
-                              `${comm.content.substring(0, 100)}...` : 
-                              comm.content
+                            {touch.summary.length > 100 ? 
+                              `${touch.summary.substring(0, 100)}...` : 
+                              touch.summary
                             }
                           </div>
                         )}

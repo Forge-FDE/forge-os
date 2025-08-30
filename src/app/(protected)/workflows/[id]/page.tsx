@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { prisma } from "@/lib/db"
+import { prisma } from "@/lib/prisma"
 import { WorkflowHeader } from "@/components/workflow/workflow-header"
 import { WorkflowGantt } from "@/components/workflow/workflow-gantt"
 import { WorkflowStats } from "@/components/workflow/workflow-stats"
@@ -18,26 +18,18 @@ export default async function WorkflowPage({ params }: WorkflowPageProps) {
       account: {
         include: {
           sto: true,
-          sponsor: true,
-          champion: true,
+          touches: {
+            orderBy: {
+              touchedAt: 'desc'
+            },
+            take: 20
+          }
         }
       },
       ownerFde: true,
       actions: {
-        include: {
-          assignedTo: true,
-        },
         orderBy: {
           dueDate: 'asc'
-        }
-      },
-      communications: {
-        include: {
-          fromUser: true,
-          toUser: true,
-        },
-        orderBy: {
-          timestamp: 'desc'
         }
       }
     }
@@ -70,7 +62,7 @@ export default async function WorkflowPage({ params }: WorkflowPageProps) {
 
       <StakeholderTracking 
         workflow={workflow} 
-        communications={workflow.communications}
+        touches={workflow.account.touches}
       />
     </div>
   )

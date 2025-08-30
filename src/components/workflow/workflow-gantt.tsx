@@ -6,12 +6,12 @@ import { Calendar, User, AlertTriangle } from "lucide-react"
 interface Action {
   id: string
   title: string
-  description: string | null
   status: string
   severity: string
+  responsible: string
   dueDate: Date | null
-  completedAt: Date | null
-  assignedTo: { name: string | null } | null
+  openedAt: Date
+  lastUpdate: Date
 }
 
 interface WorkflowGanttProps {
@@ -19,17 +19,15 @@ interface WorkflowGanttProps {
 }
 
 const severityColors: Record<string, string> = {
-  'LOW': '#10b981',
-  'MEDIUM': '#f59e0b',
-  'HIGH': '#ef4444',
-  'CRITICAL': '#dc2626'
+  'sev-2': '#10b981',
+  'sev-1': '#f59e0b', 
+  'sev-0': '#ef4444'
 }
 
 const statusColors: Record<string, { backgroundColor: string; color: string }> = {
-  'TODO': { backgroundColor: '#f3f4f6', color: '#374151' },
-  'IN_PROGRESS': { backgroundColor: '#dbeafe', color: '#2563eb' },
-  'BLOCKED': { backgroundColor: '#fed7d7', color: '#dc2626' },
-  'COMPLETED': { backgroundColor: '#d1fae5', color: '#059669' }
+  'open': { backgroundColor: '#dbeafe', color: '#2563eb' },
+  'at_risk': { backgroundColor: '#fed7d7', color: '#dc2626' },
+  'closed': { backgroundColor: '#d1fae5', color: '#059669' }
 }
 
 export function WorkflowGantt({ actions }: WorkflowGanttProps) {
@@ -63,7 +61,7 @@ export function WorkflowGantt({ actions }: WorkflowGanttProps) {
     
     // Process actions for timeline
     const timeline = actions.map(action => {
-      const actionStart = action.completedAt ? new Date(action.completedAt) : now
+      const actionStart = new Date(action.openedAt)
       const actionEnd = action.dueDate ? new Date(action.dueDate) : new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
       
       const startOffset = Math.max(0, (actionStart.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
@@ -73,7 +71,7 @@ export function WorkflowGantt({ actions }: WorkflowGanttProps) {
         ...action,
         startOffset: (startOffset / days) * 100,
         duration: (duration / days) * 100,
-        isOverdue: action.dueDate ? new Date(action.dueDate) < now && action.status !== 'COMPLETED' : false
+        isOverdue: action.dueDate ? new Date(action.dueDate) < now && action.status !== 'closed' : false
       }
     })
     
@@ -230,7 +228,7 @@ export function WorkflowGantt({ actions }: WorkflowGanttProps) {
                     color: '#6b7280'
                   }}>
                     <User size={12} />
-                    <span>{action.assignedTo?.name || 'Unassigned'}</span>
+                    <span>{action.responsible || 'Unassigned'}</span>
                   </div>
                   
                   <span style={{

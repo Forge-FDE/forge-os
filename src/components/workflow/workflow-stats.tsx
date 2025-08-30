@@ -6,23 +6,21 @@ interface WorkflowStatsProps {
   workflow: {
     id: string
     name: string
-    status: string
-    createdAt: Date
+    statusNote: string | null
     dueDate: Date | null
-    completedAt: Date | null
     account: {
-      revenue7d: number | null
-      cost7d: number | null
-      volume7d: number | null
-      qcPercent: number | null
-      escalationScore: number | null
+      revenue7d: number
+      cost7d: number
+      volume7d: number
+      qcPct7d: number
+      escalationScore: number
     }
     actions: Array<{
       id: string
       status: string
       severity: string
       dueDate: Date | null
-      completedAt: Date | null
+      openedAt: Date
     }>
   }
 }
@@ -31,26 +29,31 @@ export function WorkflowStats({ workflow }: WorkflowStatsProps) {
   // Calculate action statistics
   const actionStats = {
     total: workflow.actions.length,
-    completed: workflow.actions.filter(a => a.status === 'COMPLETED').length,
-    inProgress: workflow.actions.filter(a => a.status === 'IN_PROGRESS').length,
+    completed: workflow.actions.filter(a => a.status === 'closed').length,
+    inProgress: workflow.actions.filter(a => a.status === 'open').length,
     overdue: workflow.actions.filter(a => 
-      a.dueDate && new Date(a.dueDate) < new Date() && a.status !== 'COMPLETED'
+      a.dueDate && new Date(a.dueDate) < new Date() && a.status !== 'closed'
     ).length,
-    critical: workflow.actions.filter(a => a.severity === 'CRITICAL').length
+    critical: workflow.actions.filter(a => a.severity === 'sev-0').length
   }
 
   const completionRate = actionStats.total > 0 ? 
     (actionStats.completed / actionStats.total * 100) : 0
 
-  // Calculate timeline stats
-  const workflowAge = workflow.createdAt ? 
-    Math.ceil((new Date().getTime() - new Date(workflow.createdAt).getTime()) / (1000 * 60 * 60 * 24)) : 0
+  // Calculate timeline stats - estimate age from oldest action
+  const oldestAction = workflow.actions.length > 0 ? 
+    workflow.actions.reduce((oldest, action) => 
+      new Date(action.openedAt) < new Date(oldest.openedAt) ? action : oldest
+    ) : null
+
+  const workflowAge = oldestAction ? 
+    Math.ceil((new Date().getTime() - new Date(oldestAction.openedAt).getTime()) / (1000 * 60 * 60 * 24)) : 0
 
   const daysRemaining = workflow.dueDate ? 
     Math.ceil((new Date(workflow.dueDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)) : null
 
   // Format currency
-  const formatCurrency = (value: number | null) => {
+  const formatCurrency = (value: number) => {
     if (!value) return '$0'
     if (value >= 1000) {
       return `$${(value / 1000).toFixed(0)}k`
@@ -59,8 +62,7 @@ export function WorkflowStats({ workflow }: WorkflowStatsProps) {
   }
 
   // Format percentage
-  const formatPercent = (value: number | null) => {
-    if (value === null) return '0%'
+  const formatPercent = (value: number) => {
     return `${(value * 100).toFixed(1)}%`
   }
 
@@ -108,17 +110,17 @@ export function WorkflowStats({ workflow }: WorkflowStatsProps) {
     },
     {
       label: 'Volume (7d)',
-      value: workflow.account.volume7d?.toLocaleString() || '0',
+      value: workflow.account.volume7d.toLocaleString(),
       change: null
     },
     {
       label: 'QC Rate',
-      value: formatPercent(workflow.account.qcPercent),
+      value: formatPercent(workflow.account.qcPct7d),
       change: null
     },
     {
       label: 'Escalation Score',
-      value: workflow.account.escalationScore?.toString() || '0',
+      value: workflow.account.escalationScore.toString(),
       change: null
     }
   ]
@@ -259,33 +261,23 @@ export function WorkflowStats({ workflow }: WorkflowStatsProps) {
       {/* Status Indicator */}
       <div style={{
         padding: '16px',
-        backgroundColor: workflow.status === 'COMPLETED' ? '#d1fae5' : 
-                      workflow.status === 'ESCALATED' ? '#fed7d7' : '#dbeafe',
+        backgroundColor: workflow.statusNote?.toLowerCase().includes('complete') ? '#d1fae5' : 
+                      workflow.statusNote?.toLowerCase().includes('escalate') ? '#fed7d7' : '#dbeafe',
         borderRadius: '8px',
         textAlign: 'center'
       }}>
         <div style={{
           fontSize: '14px',
           fontWeight: '600',
-          color: workflow.status === 'COMPLETED' ? '#059669' : 
-                 workflow.status === 'ESCALATED' ? '#dc2626' : '#2563eb',
+          color: workflow.statusNote?.toLowerCase().includes('complete') ? '#059669' : 
+                 workflow.statusNote?.toLowerCase().includes('escalate') ? '#dc2626' : '#2563eb',
           textTransform: 'uppercase',
           letterSpacing: '0.05em'
         }}>
-          {workflow.status.replace('_', ' ')}
+          {workflow.statusNote || 'ACTIVE'}
         </div>
         
-        {workflow.status === 'COMPLETED' && workflow.completedAt && (
-          <div style={{
-            fontSize: '12px',
-            color: '#6b7280',
-            marginTop: '4px'
-          }}>
-            Completed {new Date(workflow.completedAt).toLocaleDateString()}
-          </div>
-        )}
-        
-        {workflow.status !== 'COMPLETED' && daysRemaining !== null && (
+        {daysRemaining !== null && (
           <div style={{
             fontSize: '12px',
             color: '#6b7280',

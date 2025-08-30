@@ -8,7 +8,7 @@ interface WorkflowHeaderProps {
     id: string
     name: string
     phase: string
-    status: string
+    statusNote: string | null
     dueDate: Date | null
     wgSentiment: string | null
     account: {
@@ -16,8 +16,8 @@ interface WorkflowHeaderProps {
       name: string
       codename: string | null
       sto: { name: string | null } | null
-      sponsor: { name: string | null } | null
-      champion: { name: string | null } | null
+      sponsor: string | null
+      champion: string | null
     }
     ownerFde: { name: string | null } | null
   }
@@ -29,6 +29,16 @@ const phaseColors: Record<string, { backgroundColor: string; color: string }> = 
   'P2_SCALING': { backgroundColor: '#d1fae5', color: '#059669' },
   'P3_SCALEUP': { backgroundColor: '#fce7f3', color: '#c2410c' },
   'P4_HANDOFF': { backgroundColor: '#fed7d7', color: '#e53e3e' }
+}
+
+// Status is determined from statusNote field
+const getStatusFromNote = (statusNote: string | null) => {
+  if (!statusNote) return 'ACTIVE'
+  const note = statusNote.toLowerCase()
+  if (note.includes('complete') || note.includes('done')) return 'COMPLETED'
+  if (note.includes('escalate') || note.includes('risk')) return 'ESCALATED'
+  if (note.includes('hold') || note.includes('pause')) return 'ON_HOLD'
+  return 'ACTIVE'
 }
 
 const statusColors: Record<string, { backgroundColor: string; color: string }> = {
@@ -54,6 +64,8 @@ export function WorkflowHeader({ workflow }: WorkflowHeaderProps) {
       year: 'numeric'
     })
   }
+
+  const workflowStatus = getStatusFromNote(workflow.statusNote)
 
   return (
     <div style={{
@@ -128,9 +140,9 @@ export function WorkflowHeader({ workflow }: WorkflowHeaderProps) {
             fontSize: '12px',
             fontWeight: '600',
             textTransform: 'uppercase',
-            ...statusColors[workflow.status] || { backgroundColor: '#f3f4f6', color: '#374151' }
+            ...statusColors[workflowStatus] || { backgroundColor: '#f3f4f6', color: '#374151' }
           }}>
-            {workflow.status.replace('_', ' ')}
+            {workflowStatus.replace('_', ' ')}
           </span>
 
           {workflow.wgSentiment && (
@@ -219,7 +231,7 @@ export function WorkflowHeader({ workflow }: WorkflowHeaderProps) {
               Champion
             </div>
             <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>
-              {workflow.account.champion?.name || 'None'}
+              {workflow.account.champion || 'None'}
             </div>
           </div>
         </div>
