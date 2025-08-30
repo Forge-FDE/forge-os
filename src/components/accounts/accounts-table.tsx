@@ -94,46 +94,46 @@ export function AccountsTable({ accounts }: AccountsTableProps) {
                 <TableCell>
                   <PhaseIndicator phase={account.phase} showLabel={false} />
                 </TableCell>
-                <TableCell>{account.sto.name || account.sto.email.split('@')[0]}</TableCell>
+                <TableCell>{account.sto?.name || account.sto?.email?.split('@')[0] || 'Unknown'}</TableCell>
                 <TableCell>
                   <div className="flex gap-2">
                     <StatusChip sentiment={account.sentiment} size="sm" />
-                    {account.dsltDays > 2 && (
+                    {(account.dsltDays || 0) > 2 && (
                       <Badge variant="outline" className="text-xs">
-                        {account.dsltDays}d DSLT
+                        {account.dsltDays || 0}d DSLT
                       </Badge>
                     )}
-                    {account.blockersOpen > 0 && (
+                    {(account.blockersOpen || 0) > 0 && (
                       <Badge variant="destructive" className="text-xs">
-                        {account.blockersOpen} blocker{account.blockersOpen > 1 ? 's' : ''}
+                        {account.blockersOpen || 0} blocker{(account.blockersOpen || 0) > 1 ? 's' : ''}
                       </Badge>
                     )}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <EscalationBadge state={account.escalationState} showIcon={false} />
+                  <EscalationBadge state={account.escalationState || 'none'} showIcon={false} />
                 </TableCell>
-                <TableCell className="text-right">{account.volume7d.toLocaleString()}</TableCell>
+                <TableCell className="text-right">{(account.volume7d || 0).toLocaleString()}</TableCell>
                 <TableCell className="text-right">
-                  {account.revenue7d > 0 ? `$${(account.revenue7d / 1000).toFixed(1)}k` : '-'}
+                  {(account.revenue7d || 0) > 0 ? `$${((account.revenue7d || 0) / 1000).toFixed(1)}k` : '-'}
                 </TableCell>
                 <TableCell className="text-right">
-                  <span className={account.qcPct7d >= 0.99 ? "text-green-600" : "text-amber-600"}>
-                    {(account.qcPct7d * 100).toFixed(1)}%
+                  <span className={(account.qcPct7d || 0) >= 0.99 ? "text-green-600" : "text-amber-600"}>
+                    {((account.qcPct7d || 0) * 100).toFixed(1)}%
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
-                  <span className={account.automation7d >= 0.3 ? "text-green-600" : ""}>
-                    {(account.automation7d * 100).toFixed(0)}%
+                  <span className={(account.automation7d || 0) >= 0.3 ? "text-green-600" : ""}>
+                    {((account.automation7d || 0) * 100).toFixed(0)}%
                   </span>
                 </TableCell>
                 <TableCell className="w-24">
                   <Sparkline 
                     data={[
-                      account.volume7d * 0.8,
-                      account.volume7d * 0.9,
-                      account.volume7d * 0.95,
-                      account.volume7d,
+                      (account.volume7d || 0) * 0.8,
+                      (account.volume7d || 0) * 0.9,
+                      (account.volume7d || 0) * 0.95,
+                      (account.volume7d || 0),
                     ]}
                     height={30}
                   />
