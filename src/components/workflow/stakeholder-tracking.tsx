@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { Users, MessageSquare, Calendar, TrendingUp, Mail, Phone } from "lucide-react"
+import React, { useState } from "react"
+import { Users, MessageSquare, Mail, Phone } from "lucide-react"
 
 interface Touch {
   id: string
@@ -24,7 +24,7 @@ interface StakeholderTrackingProps {
   touches: Touch[]
 }
 
-const channelTypeIcons: Record<string, { icon: any, color: string }> = {
+const channelTypeIcons: Record<string, { icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>, color: string }> = {
   'email': { icon: Mail, color: '#2563eb' },
   'call': { icon: Phone, color: '#059669' },
   'team': { icon: Users, color: '#7c3aed' },
