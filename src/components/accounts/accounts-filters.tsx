@@ -30,7 +30,7 @@ export function AccountsFilters({ stos }: AccountsFiltersProps) {
   
   const updateFilter = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString())
-    if (value) {
+    if (value && value !== 'all') {
       params.set(key, value)
     } else {
       params.delete(key)
@@ -64,14 +64,14 @@ export function AccountsFilters({ stos }: AccountsFiltersProps) {
       </div>
       
       <Select
-        value={searchParams.get('phase') || ''}
-        onValueChange={(value) => updateFilter('phase', value || null)}
+        value={searchParams.get('phase') || 'all'}
+        onValueChange={(value) => updateFilter('phase', value)}
       >
         <SelectTrigger className="w-[150px]">
           <SelectValue placeholder="All Phases" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Phases</SelectItem>
+          <SelectItem value="all">All Phases</SelectItem>
           <SelectItem value="P0_ALIGN">0: Alignment</SelectItem>
           <SelectItem value="P1_PILOT">1: Pilot</SelectItem>
           <SelectItem value="P2_EXPANSION">2: Expansion</SelectItem>
@@ -81,14 +81,14 @@ export function AccountsFilters({ stos }: AccountsFiltersProps) {
       </Select>
       
       <Select
-        value={searchParams.get('sentiment') || ''}
-        onValueChange={(value) => updateFilter('sentiment', value || null)}
+        value={searchParams.get('sentiment') || 'all'}
+        onValueChange={(value) => updateFilter('sentiment', value)}
       >
         <SelectTrigger className="w-[150px]">
           <SelectValue placeholder="All Sentiments" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All Sentiments</SelectItem>
+          <SelectItem value="all">All Sentiments</SelectItem>
           <SelectItem value="R">Red</SelectItem>
           <SelectItem value="Y">Yellow</SelectItem>
           <SelectItem value="G">Green</SelectItem>
@@ -96,14 +96,14 @@ export function AccountsFilters({ stos }: AccountsFiltersProps) {
       </Select>
       
       <Select
-        value={searchParams.get('sto') || ''}
-        onValueChange={(value) => updateFilter('sto', value || null)}
+        value={searchParams.get('sto') || 'all'}
+        onValueChange={(value) => updateFilter('sto', value)}
       >
         <SelectTrigger className="w-[150px]">
           <SelectValue placeholder="All STOs" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All STOs</SelectItem>
+          <SelectItem value="all">All STOs</SelectItem>
           {stos.map((sto) => (
             <SelectItem key={sto.id} value={sto.id}>
               {sto.name || sto.email.split('@')[0]}
@@ -113,14 +113,14 @@ export function AccountsFilters({ stos }: AccountsFiltersProps) {
       </Select>
       
       <Select
-        value={searchParams.get('state') || ''}
-        onValueChange={(value) => updateFilter('state', value || null)}
+        value={searchParams.get('state') || 'all'}
+        onValueChange={(value) => updateFilter('state', value)}
       >
         <SelectTrigger className="w-[150px]">
           <SelectValue placeholder="All States" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All States</SelectItem>
+          <SelectItem value="all">All States</SelectItem>
           <SelectItem value="none">OK</SelectItem>
           <SelectItem value="watch">Watch</SelectItem>
           <SelectItem value="escalate">Escalate</SelectItem>
