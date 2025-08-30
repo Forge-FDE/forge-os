@@ -1,8 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import { MetricCard } from "@/components/dashboard/metric-card"
 import { EscalationQueueV2 } from "@/components/dashboard/escalation-queue-v2"
-import { OwnerLoadV2 } from "@/components/dashboard/owner-load-v2"
-import { PaidAccountsV2 } from "@/components/dashboard/paid-accounts-v2"
+import { DashboardContent } from "@/components/dashboard/dashboard-content"
 
 export default async function DashboardPage() {
   // Fetch dashboard data
@@ -115,26 +114,16 @@ export default async function DashboardPage() {
         />
       </div>
 
+      {/* Escalation Queue - Full Width */}
+      <EscalationQueueV2 workflows={workflows} />
+
       {/* Main Content Grid */}
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: '2fr 1fr', 
         gap: '24px' 
       }}>
-        {/* Left Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <EscalationQueueV2 workflows={workflows} />
-          <PaidAccountsV2 accounts={accounts} title="All Accounts" />
-        </div>
-        
-        {/* Right Column */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          <OwnerLoadV2 data={owners} />
-          <PaidAccountsV2 
-            accounts={accounts.filter(a => a.revenue7d > 0)} 
-            compact={true}
-          />
-        </div>
+        <DashboardContent accounts={accounts} owners={owners} />
       </div>
     </div>
   )

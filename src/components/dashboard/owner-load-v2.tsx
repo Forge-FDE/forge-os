@@ -11,11 +11,17 @@ interface OwnerLoadProps {
       accounts: number
     }
   }>
+  onOwnerSelect?: (ownerId: string | null) => void
+  selectedOwnerId?: string | null
 }
 
-export function OwnerLoadV2({ data }: OwnerLoadProps) {
-  const [selectedOwner, setSelectedOwner] = useState<string | null>(null)
+export function OwnerLoadV2({ data, onOwnerSelect, selectedOwnerId }: OwnerLoadProps) {
   const maxLoad = Math.max(...data.map(d => d._count.accounts)) || 1
+
+  const handleOwnerClick = (ownerId: string) => {
+    const newSelection = selectedOwnerId === ownerId ? null : ownerId
+    onOwnerSelect?.(newSelection)
+  }
   
   return (
     <div style={{
@@ -29,20 +35,49 @@ export function OwnerLoadV2({ data }: OwnerLoadProps) {
         padding: '16px 24px',
         borderBottom: '1px solid #e5e7eb'
       }}>
-        <h3 style={{
-          fontSize: '18px',
-          fontWeight: '600',
-          color: '#111827',
-          margin: '0'
-        }}>
-          Load by owner
-        </h3>
+<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h3 style={{
+            fontSize: '18px',
+            fontWeight: '600',
+            color: '#111827',
+            margin: '0'
+          }}>
+            Load by owner
+          </h3>
+          {selectedOwnerId && (
+            <button
+              onClick={() => onOwnerSelect?.(null)}
+              style={{
+                padding: '4px 8px',
+                fontSize: '12px',
+                backgroundColor: '#ef4444',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Clear filter
+            </button>
+          )}
+        </div>
       </div>
       <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        {selectedOwnerId && (
+          <div style={{
+            padding: '8px 12px',
+            backgroundColor: '#dbeafe',
+            borderRadius: '6px',
+            fontSize: '13px',
+            color: '#1d4ed8'
+          }}>
+            📊 Filtering by: {data.find(o => o.id === selectedOwnerId)?.name || 'Selected owner'}
+          </div>
+        )}
         {data.map((owner) => {
           const load = owner._count.accounts
           const percentage = (load / maxLoad) * 100
-          const isSelected = selectedOwner === owner.id
+          const isSelected = selectedOwnerId === owner.id
           
           return (
             <div 
@@ -51,14 +86,14 @@ export function OwnerLoadV2({ data }: OwnerLoadProps) {
                 display: 'flex', 
                 flexDirection: 'column', 
                 gap: '8px',
-                padding: '8px',
-                borderRadius: '6px',
-                backgroundColor: isSelected ? '#f0f9ff' : 'transparent',
-                border: isSelected ? '1px solid #0ea5e9' : '1px solid transparent',
+                padding: '12px',
+                borderRadius: '8px',
+                backgroundColor: isSelected ? '#dbeafe' : 'transparent',
+                border: isSelected ? '2px solid #2563eb' : '1px solid transparent',
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
-              onClick={() => setSelectedOwner(isSelected ? null : owner.id)}
+              onClick={() => handleOwnerClick(owner.id)}
               onMouseEnter={(e) => {
                 if (!isSelected) {
                   e.currentTarget.style.backgroundColor = '#f9fafb';

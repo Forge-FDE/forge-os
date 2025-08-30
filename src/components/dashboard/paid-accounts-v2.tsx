@@ -16,10 +16,12 @@ interface PaidAccountsProps {
     aht7d: number
   }>
   compact?: boolean
+  title?: string
 }
 
-export function PaidAccountsV2({ accounts, compact = false }: PaidAccountsProps) {
-  const paidAccounts = accounts.filter(a => a.revenue7d > 0).slice(0, compact ? 3 : 6)
+export function PaidAccountsV2({ accounts, compact = false, title = "Accounts" }: PaidAccountsProps) {
+  // Show all accounts, not just paid ones
+  const displayAccounts = accounts.slice(0, compact ? 3 : 6)
   
   if (compact) {
     return (
@@ -39,7 +41,7 @@ export function PaidAccountsV2({ accounts, compact = false }: PaidAccountsProps)
             color: '#111827',
             margin: '0'
           }}>
-            Paid Accounts <span style={{ 
+{title} <span style={{ 
               fontSize: '14px', 
               fontWeight: '400', 
               color: '#6b7280' 
@@ -47,7 +49,7 @@ export function PaidAccountsV2({ accounts, compact = false }: PaidAccountsProps)
           </h3>
         </div>
         <div style={{ padding: '24px' }}>
-          {paidAccounts.map((account) => (
+          {displayAccounts.map((account) => (
             <Link key={account.id} href={`/accounts/${account.id}`} style={{ textDecoration: 'none' }}>
               <div 
                 style={{ 
@@ -127,7 +129,7 @@ export function PaidAccountsV2({ accounts, compact = false }: PaidAccountsProps)
           color: '#111827',
           margin: '0'
         }}>
-          Paid Accounts <span style={{ 
+          {title} <span style={{ 
             fontSize: '14px', 
             fontWeight: '400', 
             color: '#6b7280' 
@@ -213,11 +215,11 @@ export function PaidAccountsV2({ accounts, compact = false }: PaidAccountsProps)
             </tr>
           </thead>
           <tbody style={{ backgroundColor: 'white' }}>
-            {paidAccounts.map((account, index) => (
+            {displayAccounts.map((account, index) => (
               <Link key={account.id} href={`/accounts/${account.id}`} style={{ textDecoration: 'none' }}>
                 <tr 
                   style={{
-                    borderBottom: index < paidAccounts.length - 1 ? '1px solid #f3f4f6' : 'none',
+                    borderBottom: index < displayAccounts.length - 1 ? '1px solid #f3f4f6' : 'none',
                     cursor: 'pointer',
                     transition: 'background-color 0.2s'
                   }}
