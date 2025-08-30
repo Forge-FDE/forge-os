@@ -5,12 +5,17 @@ import { formatDistanceToNow } from "date-fns"
 interface AccountActionsProps {
   actions: Array<{
     id: string
+    accountId: string
+    workflowId: string | null
     title: string
     severity: string
     status: string
     responsible: string
     dueDate: Date | null
     openedAt: Date
+    lastUpdate: Date
+    slackLink: string | null
+    docLink: string | null
     ageD: number
   }>
 }

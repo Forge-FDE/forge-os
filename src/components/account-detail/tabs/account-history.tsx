@@ -6,6 +6,8 @@ import { MessageSquare, Phone, Mail, Users } from "lucide-react"
 interface AccountHistoryProps {
   touches: Array<{
     id: string
+    accountId: string
+    workflowId: string | null
     touchedAt: Date
     actor: string
     channel: string

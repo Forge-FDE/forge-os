@@ -9,9 +9,14 @@ interface AccountStakeholdersProps {
     name: string
     role: string
     contact: string | null
+    accountId: string
     sentiments: Array<{
+      id: string
       sentiment: string
+      notes: string | null
       date: Date
+      accountId: string
+      stakeholderId: string
     }>
   }>
 }
