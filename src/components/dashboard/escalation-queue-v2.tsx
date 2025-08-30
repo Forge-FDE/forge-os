@@ -103,17 +103,22 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
           <p>No escalated workflows found</p>
         </div>
       ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+        <div style={{ overflowX: 'auto', width: '100%' }}>
+          <table style={{ 
+            width: '100%', 
+            minWidth: '1000px',
+            borderCollapse: 'collapse', 
+            tableLayout: 'fixed' 
+          }}>
             <colgroup>
-              <col style={{ width: '20%' }} />
-              <col style={{ width: '15%' }} />
-              <col style={{ width: '10%' }} />
-              <col style={{ width: '12%' }} />
-              <col style={{ width: '10%' }} />
-              <col style={{ width: '12%' }} />
-              <col style={{ width: '8%' }} />
-              <col style={{ width: '8%' }} />
+              <col style={{ width: '200px' }} />
+              <col style={{ width: '150px' }} />
+              <col style={{ width: '100px' }} />
+              <col style={{ width: '120px' }} />
+              <col style={{ width: '100px' }} />
+              <col style={{ width: '120px' }} />
+              <col style={{ width: '100px' }} />
+              <col style={{ width: '100px' }} />
             </colgroup>
             <thead style={{ backgroundColor: '#f9fafb' }}>
               <tr>
@@ -193,7 +198,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
             </thead>
             <tbody style={{ backgroundColor: 'white' }}>
               {escalatedWorkflows.map((workflow, index) => (
-                <Link key={workflow.id} href={`/accounts/${workflow.account.id}`} style={{ textDecoration: 'none' }}>
+                <Link key={workflow.id} href={`/workflows/${workflow.id}`} style={{ textDecoration: 'none' }}>
                   <tr 
                     style={{
                       borderBottom: index < escalatedWorkflows.length - 1 ? '1px solid #f3f4f6' : 'none',
