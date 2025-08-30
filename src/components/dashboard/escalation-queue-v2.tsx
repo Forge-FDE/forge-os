@@ -104,11 +104,21 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+            <colgroup>
+              <col style={{ width: '20%' }} />
+              <col style={{ width: '15%' }} />
+              <col style={{ width: '10%' }} />
+              <col style={{ width: '12%' }} />
+              <col style={{ width: '10%' }} />
+              <col style={{ width: '12%' }} />
+              <col style={{ width: '8%' }} />
+              <col style={{ width: '8%' }} />
+            </colgroup>
             <thead style={{ backgroundColor: '#f9fafb' }}>
               <tr>
                 <th style={{
-                  padding: '12px 24px',
+                  padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
@@ -117,7 +127,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                   letterSpacing: '0.05em'
                 }}>WORKFLOW</th>
                 <th style={{
-                  padding: '12px 24px',
+                  padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
@@ -126,7 +136,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                   letterSpacing: '0.05em'
                 }}>ACCOUNT</th>
                 <th style={{
-                  padding: '12px 24px',
+                  padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
@@ -135,7 +145,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                   letterSpacing: '0.05em'
                 }}>PHASE</th>
                 <th style={{
-                  padding: '12px 24px',
+                  padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
@@ -144,7 +154,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                   letterSpacing: '0.05em'
                 }}>OWNER</th>
                 <th style={{
-                  padding: '12px 24px',
+                  padding: '12px 16px',
                   textAlign: 'center',
                   fontSize: '12px',
                   fontWeight: '500',
@@ -153,7 +163,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                   letterSpacing: '0.05em'
                 }}>ACTIONS</th>
                 <th style={{
-                  padding: '12px 24px',
+                  padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
@@ -162,7 +172,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                   letterSpacing: '0.05em'
                 }}>DUE</th>
                 <th style={{
-                  padding: '12px 24px',
+                  padding: '12px 16px',
                   textAlign: 'center',
                   fontSize: '12px',
                   fontWeight: '500',
@@ -171,7 +181,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                   letterSpacing: '0.05em'
                 }}>SENTIMENT</th>
                 <th style={{
-                  padding: '12px 24px',
+                  padding: '12px 16px',
                   textAlign: 'right',
                   fontSize: '12px',
                   fontWeight: '500',
@@ -198,40 +208,50 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                     }}
                   >
                     <td style={{
-                      padding: '16px 24px',
+                      padding: '16px 16px',
                       fontSize: '14px',
                       fontWeight: '500',
-                      color: '#111827'
+                      color: '#111827',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
                     }}>
                       {workflow.name}
                     </td>
                     <td style={{
-                      padding: '16px 24px',
+                      padding: '16px 16px',
                       fontSize: '14px',
-                      color: '#6b7280'
+                      color: '#6b7280',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
                     }}>
                       {workflow.account.name}
                     </td>
-                    <td style={{ padding: '16px 24px' }}>
+                    <td style={{ padding: '16px 16px' }}>
                       <span style={{
-                        padding: '2px 8px',
+                        padding: '2px 6px',
                         borderRadius: '12px',
-                        fontSize: '12px',
+                        fontSize: '11px',
                         fontWeight: '500',
+                        whiteSpace: 'nowrap',
                         ...phaseColors[workflow.phase]
                       }}>
                         {workflow.phase.replace('P', 'P').replace('_', ' ')}
                       </span>
                     </td>
                     <td style={{
-                      padding: '16px 24px',
+                      padding: '16px 16px',
                       fontSize: '14px',
-                      color: '#6b7280'
+                      color: '#6b7280',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
                     }}>
                       {workflow.ownerFde?.name || 'Unassigned'}
                     </td>
                     <td style={{
-                      padding: '16px 24px',
+                      padding: '16px 16px',
                       textAlign: 'center'
                     }}>
                       <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
@@ -249,7 +269,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                         ))}
                         {workflow.actions.length > 3 && (
                           <span style={{ 
-                            fontSize: '11px', 
+                            fontSize: '10px', 
                             color: '#6b7280', 
                             marginLeft: '4px' 
                           }}>
@@ -259,14 +279,15 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       </div>
                     </td>
                     <td style={{
-                      padding: '16px 24px',
-                      fontSize: '13px',
-                      color: workflow.dueDate && new Date(workflow.dueDate) < new Date() ? '#dc2626' : '#6b7280'
+                      padding: '16px 16px',
+                      fontSize: '12px',
+                      color: workflow.dueDate && new Date(workflow.dueDate) < new Date() ? '#dc2626' : '#6b7280',
+                      whiteSpace: 'nowrap'
                     }}>
                       {formatDate(workflow.dueDate)}
                     </td>
                     <td style={{
-                      padding: '16px 24px',
+                      padding: '16px 16px',
                       textAlign: 'center'
                     }}>
                       {workflow.wgSentiment && (
@@ -282,7 +303,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       )}
                     </td>
                     <td style={{
-                      padding: '16px 24px',
+                      padding: '16px 16px',
                       textAlign: 'right',
                       fontSize: '14px',
                       fontWeight: '600',
