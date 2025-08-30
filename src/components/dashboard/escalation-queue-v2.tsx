@@ -1,6 +1,3 @@
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
 import { Phase } from "@prisma/client"
 
 interface EscalationQueueProps {
@@ -26,75 +23,101 @@ export function EscalationQueueV2({ accounts }: EscalationQueueProps) {
     .slice(0, 4)
   
   const phaseColors = {
-    P0_ALIGN: "bg-gray-100 text-gray-700",
-    P1_PILOT: "bg-blue-100 text-blue-700",
-    P2_EXPANSION: "bg-purple-100 text-purple-700",
-    P3_ENTERPRISE: "bg-green-100 text-green-700",
-    P4_HANDOFF: "bg-orange-100 text-orange-700",
+    P0_ALIGN: { backgroundColor: '#f3f4f6', color: '#374151' },
+    P1_PILOT: { backgroundColor: '#dbeafe', color: '#1d4ed8' },
+    P2_EXPANSION: { backgroundColor: '#ede9fe', color: '#7c2d12' },
+    P3_ENTERPRISE: { backgroundColor: '#dcfce7', color: '#166534' },
+    P4_HANDOFF: { backgroundColor: '#fed7aa', color: '#c2410c' },
   }
   
   const sentimentColors = {
-    R: "bg-red-500",
-    Y: "bg-yellow-500",
-    G: "bg-green-500",
+    R: '#ef4444',
+    Y: '#eab308', 
+    G: '#22c55e',
   }
   
   return (
-    <Card className="bg-white shadow-sm">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-900">Escalation Queue</h3>
-          <button className="text-gray-400 hover:text-gray-600">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-            </svg>
-          </button>
-        </div>
+    <div style={{
+      backgroundColor: 'white',
+      borderRadius: '8px',
+      border: '1px solid #e5e7eb',
+      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+    }}>
+      <div style={{
+        padding: '16px 24px',
+        borderBottom: '1px solid #e5e7eb',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+      }}>
+        <h3 style={{
+          fontSize: '18px',
+          fontWeight: '600',
+          color: '#111827',
+          margin: '0'
+        }}>
+          Escalation Queue
+        </h3>
       </div>
       
-      <div className="overflow-x-auto">
-        <table className="min-w-full">
-          <thead className="bg-gray-50">
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead style={{ backgroundColor: '#f9fafb' }}>
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Account</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phase</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">STD</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">DSLT</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sentiment</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Oldest blocker age</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Next gate due</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+              <th style={headerStyle}>Account</th>
+              <th style={headerStyle}>Phase</th>
+              <th style={headerStyle}>STO</th>
+              <th style={headerStyle}>DSLT</th>
+              <th style={headerStyle}>Sentiment</th>
+              <th style={headerStyle}>Blocker Age</th>
+              <th style={headerStyle}>Gate Due</th>
+              <th style={headerStyle}>Score</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {escalated.map((account) => {
+          <tbody style={{ backgroundColor: 'white' }}>
+            {escalated.map((account, index) => {
               const phaseNum = account.phase.split('_')[0].replace('P', '')
+              const phaseStyle = phaseColors[account.phase as keyof typeof phaseColors] || phaseColors.P0_ALIGN
+              
               return (
-                <tr key={account.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {account.name}
+                <tr key={account.id} style={{
+                  borderBottom: index < escalated.length - 1 ? '1px solid #f3f4f6' : 'none'
+                }}>
+                  <td style={cellStyle}>
+                    <span style={{ fontWeight: '500' }}>{account.name}</span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <Badge className={cn("text-xs", phaseColors[account.phase as keyof typeof phaseColors])}>
+                  <td style={cellStyle}>
+                    <span style={{
+                      ...phaseStyle,
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: '500'
+                    }}>
                       {phaseNum}
-                    </Badge>
+                    </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td style={cellStyle}>
                     {account.sto.name?.split(' ')[0] || account.sto.email.split('@')[0].toUpperCase()}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {account.dsltDays}d
+                  <td style={cellStyle}>
+                    <span style={{ fontWeight: '500' }}>{account.dsltDays}d</span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className={`w-4 h-4 rounded-full ${sentimentColors[account.sentiment as keyof typeof sentimentColors]}`} />
+                  <td style={cellStyle}>
+                    <div style={{
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      backgroundColor: sentimentColors[account.sentiment as keyof typeof sentimentColors] || '#6b7280'
+                    }} />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td style={cellStyle}>
                     {account.oldestBlockerAgeD}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td style={cellStyle}>
                     {account.nextGateDue ? `P${phaseNum}-1` : '-'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td style={cellStyle}>
                     {account.escalationScore}
                   </td>
                 </tr>
@@ -103,6 +126,23 @@ export function EscalationQueueV2({ accounts }: EscalationQueueProps) {
           </tbody>
         </table>
       </div>
-    </Card>
+    </div>
   )
+}
+
+const headerStyle = {
+  padding: '12px 24px',
+  textAlign: 'left' as const,
+  fontSize: '12px',
+  fontWeight: '500',
+  color: '#6b7280',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.05em'
+}
+
+const cellStyle = {
+  padding: '16px 24px',
+  whiteSpace: 'nowrap' as const,
+  fontSize: '14px',
+  color: '#111827'
 }

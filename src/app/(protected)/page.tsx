@@ -46,9 +46,13 @@ export default async function DashboardPage() {
   const avgAHT = metrics._avg.aht7d || 0
   
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Metrics Row */}
-      <div className="grid grid-cols-5 gap-4">
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(5, 1fr)', 
+        gap: '16px' 
+      }}>
         <MetricCard
           title="Active Accounts"
           value={accounts.length}
@@ -72,15 +76,19 @@ export default async function DashboardPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-12 gap-6">
-        {/* Escalation Queue - Left Column */}
-        <div className="col-span-8 space-y-6">
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: '2fr 1fr', 
+        gap: '24px' 
+      }}>
+        {/* Left Column */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <EscalationQueueV2 accounts={accounts} />
           <PaidAccountsV2 accounts={accounts} />
         </div>
         
         {/* Right Column */}
-        <div className="col-span-4 space-y-6">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <OwnerLoadV2 data={owners} />
           <PaidAccountsV2 
             accounts={accounts.filter(a => a.revenue7d > 0)} 

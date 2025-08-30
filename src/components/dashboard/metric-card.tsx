@@ -1,5 +1,3 @@
-import { Card } from "@/components/ui/card"
-
 interface MetricCardProps {
   title: string
   value: string | number
@@ -7,9 +5,33 @@ interface MetricCardProps {
 
 export function MetricCard({ title, value }: MetricCardProps) {
   return (
-    <Card className="bg-white p-4 shadow-sm">
-      <p className="text-xs text-gray-500 uppercase tracking-wider">{title}</p>
-      <p className="mt-2 text-2xl font-semibold text-gray-900">{value}</p>
-    </Card>
+    <div 
+      style={{
+        backgroundColor: 'white',
+        padding: '16px',
+        borderRadius: '8px',
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+      }}
+    >
+      <p style={{ 
+        fontSize: '12px', 
+        color: '#6b7280', 
+        textTransform: 'uppercase', 
+        letterSpacing: '0.05em',
+        margin: '0'
+      }}>
+        {title}
+      </p>
+      <p style={{ 
+        marginTop: '8px', 
+        fontSize: '24px', 
+        fontWeight: '600', 
+        color: '#111827',
+        margin: '8px 0 0 0'
+      }}>
+        {value}
+      </p>
+    </div>
   )
 }

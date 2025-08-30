@@ -1,7 +1,5 @@
 "use client"
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-
 interface TopNavProps {
   user: {
     email: string

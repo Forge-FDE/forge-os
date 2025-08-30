@@ -1,6 +1,5 @@
 "use client"
 
-import { Card } from "@/components/ui/card"
 // import { LineChart, Line, ResponsiveContainer } from "recharts"
 
 interface PaidAccountsProps {
@@ -22,45 +21,99 @@ export function PaidAccountsV2({ accounts, compact = false }: PaidAccountsProps)
   
   if (compact) {
     return (
-      <Card className="bg-white shadow-sm">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">
-            Paid Accounts <span className="text-sm font-normal text-gray-500">(rev/cost/SLAs)</span>
+      <div style={{
+        backgroundColor: 'white',
+        borderRadius: '8px',
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+      }}>
+        <div style={{
+          padding: '16px 24px',
+          borderBottom: '1px solid #e5e7eb'
+        }}>
+          <h3 style={{
+            fontSize: '18px',
+            fontWeight: '600',
+            color: '#111827',
+            margin: '0'
+          }}>
+            Paid Accounts <span style={{ 
+              fontSize: '14px', 
+              fontWeight: '400', 
+              color: '#6b7280' 
+            }}>(rev/cost/SLAs)</span>
           </h3>
         </div>
-        <div className="p-6 space-y-4">
+        <div style={{ padding: '24px' }}>
           {paidAccounts.map((account) => (
-            <div key={account.id} className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-900">{account.name}</span>
-                <span className="text-sm text-gray-500">GM {(account.gm7d * 100).toFixed(0)}%</span>
+            <div key={account.id} style={{ marginBottom: '16px' }}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                marginBottom: '8px'
+              }}>
+                <span style={{ fontSize: '14px', fontWeight: '500', color: '#111827' }}>
+                  {account.name}
+                </span>
+                <span style={{ fontSize: '14px', color: '#6b7280' }}>
+                  GM {(account.gm7d * 100).toFixed(0)}%
+                </span>
               </div>
-              <div className="grid grid-cols-3 gap-4 text-xs">
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: '1fr 1fr 1fr', 
+                gap: '16px', 
+                fontSize: '12px' 
+              }}>
                 <div>
-                  <p className="text-gray-500">Revenue</p>
-                  <p className="font-semibold">${(account.revenue7d / 1000).toFixed(0)}k</p>
+                  <p style={{ color: '#6b7280', margin: '0' }}>Revenue</p>
+                  <p style={{ fontWeight: '600', margin: '2px 0 0 0' }}>
+                    ${(account.revenue7d / 1000).toFixed(0)}k
+                  </p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Cost</p>
-                  <p className="font-semibold">${(account.cost7d / 1000).toFixed(0)}k</p>
+                  <p style={{ color: '#6b7280', margin: '0' }}>Cost</p>
+                  <p style={{ fontWeight: '600', margin: '2px 0 0 0' }}>
+                    ${(account.cost7d / 1000).toFixed(0)}k
+                  </p>
                 </div>
                 <div>
-                  <p className="text-gray-500">GM</p>
-                  <p className="font-semibold">{(account.gm7d * 100).toFixed(1)}%</p>
+                  <p style={{ color: '#6b7280', margin: '0' }}>GM</p>
+                  <p style={{ fontWeight: '600', margin: '2px 0 0 0' }}>
+                    {(account.gm7d * 100).toFixed(1)}%
+                  </p>
                 </div>
               </div>
             </div>
           ))}
         </div>
-      </Card>
+      </div>
     )
   }
   
   return (
-    <Card className="bg-white shadow-sm">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-900">
-          Paid Accounts <span className="text-sm font-normal text-gray-500">(rev/cost/SLAs)</span>
+    <div style={{
+      backgroundColor: 'white',
+      borderRadius: '8px',
+      border: '1px solid #e5e7eb',
+      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+    }}>
+      <div style={{
+        padding: '16px 24px',
+        borderBottom: '1px solid #e5e7eb'
+      }}>
+        <h3 style={{
+          fontSize: '18px',
+          fontWeight: '600',
+          color: '#111827',
+          margin: '0'
+        }}>
+          Paid Accounts <span style={{ 
+            fontSize: '14px', 
+            fontWeight: '400', 
+            color: '#6b7280' 
+          }}>(rev/cost/SLAs)</span>
         </h3>
       </div>
       <div className="overflow-x-auto">
@@ -111,6 +164,6 @@ export function PaidAccountsV2({ accounts, compact = false }: PaidAccountsProps)
           </tbody>
         </table>
       </div>
-    </Card>
+    </div>
   )
 }
