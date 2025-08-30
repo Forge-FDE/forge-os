@@ -31,8 +31,6 @@ interface AccountsTableProps {
       email: string
       role: string
       createdAt: Date
-      emailVerified: Date | null
-      image: string | null
     }
     sentiment: string | null
     escalationState: string

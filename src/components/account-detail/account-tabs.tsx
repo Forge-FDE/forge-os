@@ -41,8 +41,6 @@ interface AccountTabsProps {
       email: string
       role: string
       createdAt: Date
-      emailVerified: Date | null
-      image: string | null
     } | null
     
     workflows: Array<{
@@ -57,8 +55,6 @@ interface AccountTabsProps {
         email: string
         role: string
         createdAt: Date
-        emailVerified: Date | null
-        image: string | null
       } | null
       golden10: boolean
       accessReady: boolean
@@ -144,12 +140,13 @@ export function AccountTabs({ account }: AccountTabsProps) {
       </TabsContent>
       
       <TabsContent value="actions">
-        <AccountActions actions={account.actions} />
+        <AccountActions actions={account.actions} accountId={account.id} />
       </TabsContent>
       
       <TabsContent value="stakeholders">
         <AccountStakeholders 
           stakeholders={account.stakeholders} 
+          accountId={account.id}
         />
       </TabsContent>
       

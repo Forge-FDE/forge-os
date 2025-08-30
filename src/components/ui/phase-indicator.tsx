@@ -17,7 +17,7 @@ const phaseConfig = {
 
 export function PhaseIndicator({ phase, className, showLabel = true }: PhaseIndicatorProps) {
   const config = phaseConfig[phase]
-  
+
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div className="flex gap-1">

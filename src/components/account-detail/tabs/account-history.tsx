@@ -1,13 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { formatDistanceToNow } from "date-fns"
-import { MessageSquare, Phone, Mail, Users } from "lucide-react"
+import { Mail, Phone, Users, Building } from "lucide-react"
 
-interface AccountHistoryProps {
+interface HistoryProps {
   touches: Array<{
     id: string
-    accountId: string
-    workflowId: string | null
     touchedAt: Date
     actor: string
     channel: string
@@ -15,68 +13,60 @@ interface AccountHistoryProps {
   }>
 }
 
-export function AccountHistory({ touches }: AccountHistoryProps) {
+export function AccountHistory({ touches }: HistoryProps) {
+  const channelIcons = {
+    exec: Building,
+    team: Users,
+    email: Mail,
+    call: Phone,
+  }
+  
+  const channelLabels = {
+    exec: "Executive",
+    team: "Team",
+    email: "Email",
+    call: "Call",
+  }
+  
   if (touches.length === 0) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle>No Touch History</CardTitle>
-          <CardDescription>
-            No interaction history has been recorded for this account yet.
-          </CardDescription>
-        </CardHeader>
+        <CardContent className="p-6 text-center text-sm text-muted-foreground">
+          No touch history recorded
+        </CardContent>
       </Card>
     )
   }
-
-  const getChannelIcon = (channel: string) => {
-    switch (channel) {
-      case 'email': return Mail
-      case 'call': return Phone
-      case 'team': return Users
-      case 'exec': return Users
-      default: return MessageSquare
-    }
-  }
-
-  const getChannelVariant = (channel: string) => {
-    switch (channel) {
-      case 'exec': return 'default'
-      case 'team': return 'secondary'
-      case 'email': return 'outline'
-      case 'call': return 'outline'
-      default: return 'secondary'
-    }
-  }
-
+  
   return (
     <div className="space-y-4">
       {touches.map((touch) => {
-        const Icon = getChannelIcon(touch.channel)
+        const Icon = channelIcons[touch.channel as keyof typeof channelIcons] || Mail
+        const label = channelLabels[touch.channel as keyof typeof channelLabels] || touch.channel
         
         return (
           <Card key={touch.id}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <Icon className="h-5 w-5 text-muted-foreground" />
-                  <div>
-                    <CardTitle className="text-base">{touch.actor}</CardTitle>
-                    <CardDescription>
-                      {formatDistanceToNow(new Date(touch.touchedAt), { addSuffix: true })}
-                    </CardDescription>
-                  </div>
+            <CardContent className="p-4">
+              <div className="flex items-start gap-3">
+                <div className="mt-1">
+                  <Icon className="h-4 w-4 text-muted-foreground" />
                 </div>
-                <Badge variant={getChannelVariant(touch.channel)}>
-                  {touch.channel.charAt(0).toUpperCase() + touch.channel.slice(1)}
-                </Badge>
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-medium text-sm">{touch.actor}</span>
+                    <Badge variant="outline" className="text-xs">
+                      {label}
+                    </Badge>
+                    <span className="text-xs text-muted-foreground">
+                      {formatDistanceToNow(new Date(touch.touchedAt), { addSuffix: true })}
+                    </span>
+                  </div>
+                  {touch.summary && (
+                    <p className="text-sm text-muted-foreground">{touch.summary}</p>
+                  )}
+                </div>
               </div>
-            </CardHeader>
-            {touch.summary && (
-              <CardContent>
-                <p className="text-sm text-muted-foreground">{touch.summary}</p>
-              </CardContent>
-            )}
+            </CardContent>
           </Card>
         )
       })}

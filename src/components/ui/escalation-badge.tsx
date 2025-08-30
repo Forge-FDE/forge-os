@@ -27,10 +27,10 @@ export function EscalationBadge({ state, score, showIcon = true, className }: Es
       icon: CheckCircle,
     },
   }
-  
+
   const currentConfig = config[state as keyof typeof config] || config.none
   const Icon = currentConfig.icon
-  
+
   return (
     <Badge
       className={cn(

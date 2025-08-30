@@ -1,6 +1,53 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { prisma } from "@/lib/prisma"
+import { ActionsBoard } from "@/components/actions/actions-board"
+import { ActionsFilters } from "@/components/actions/actions-filters"
+import { Suspense } from "react"
 
-export default function ActionsPage() {
+interface PageProps {
+  searchParams: Promise<{
+    severity?: string
+    responsible?: string
+    account?: string
+  }>
+}
+
+export default async function ActionsPage({ searchParams }: PageProps) {
+  const params = await searchParams
+  
+  const filters = {
+    status: { not: 'closed' },
+    ...(params.severity && { severity: params.severity }),
+    ...(params.responsible && { 
+      responsible: { contains: params.responsible, mode: 'insensitive' as const } 
+    }),
+    ...(params.account && { accountId: params.account }),
+  }
+  
+  const [actions, accounts] = await Promise.all([
+    prisma.action.findMany({
+      where: filters,
+      include: {
+        account: true,
+        workflow: true,
+      },
+      orderBy: [
+        { severity: 'asc' },
+        { ageD: 'desc' },
+      ],
+    }),
+    prisma.account.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    }),
+  ])
+  
+  // Get unique responsible people
+  const allActions = await prisma.action.findMany({
+    select: { responsible: true },
+    distinct: ['responsible'],
+  })
+  const responsibles = allActions.map(a => a.responsible).filter(Boolean)
+  
   return (
     <div className="space-y-6">
       <div>
@@ -10,19 +57,14 @@ export default function ActionsPage() {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Open Actions</CardTitle>
-          <CardDescription>
-            Actions requiring attention
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No open actions. Actions will appear here after data ingestion.
-          </p>
-        </CardContent>
-      </Card>
+      <Suspense fallback={<div className="h-16 bg-muted rounded-lg animate-pulse" />}>
+        <ActionsFilters 
+          accounts={accounts} 
+          responsibles={responsibles} 
+        />
+      </Suspense>
+      
+      <ActionsBoard actions={actions} />
     </div>
   )
 }

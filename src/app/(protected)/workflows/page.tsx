@@ -1,28 +1,30 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { prisma } from "@/lib/prisma"
+import { WorkflowsTable } from "@/components/workflows/workflows-table"
 
-export default function WorkflowsPage() {
+export default async function WorkflowsPage() {
+  const workflows = await prisma.workflow.findMany({
+    include: {
+      account: true,
+      ownerFde: true,
+      actions: {
+        where: { status: { not: 'closed' } },
+      },
+    },
+    orderBy: [
+      { volume7d: 'desc' },
+    ],
+  })
+  
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Workflows</h1>
         <p className="text-muted-foreground">
-          Track workflow progress and ownership
+          Track workflow progress and ownership across all accounts
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Workflow List</CardTitle>
-          <CardDescription>
-            All workflows across accounts
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No workflows found. Workflows will appear here after data ingestion.
-          </p>
-        </CardContent>
-      </Card>
+      <WorkflowsTable workflows={workflows} />
     </div>
   )
 }

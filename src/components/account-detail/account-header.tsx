@@ -18,8 +18,6 @@ interface AccountHeaderProps {
       email: string
       role: string
       createdAt: Date
-      emailVerified: Date | null
-      image: string | null
     } | null
     sponsor: string | null
     champion: string | null

@@ -19,8 +19,6 @@ interface AccountsFiltersProps {
     email: string
     role: string
     createdAt: Date
-    emailVerified: Date | null
-    image: string | null
   }>
 }
 

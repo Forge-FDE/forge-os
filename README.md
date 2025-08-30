@@ -1,70 +1,85 @@
-# Forge OS
+# Forge OS - STO Account & Workflow Dashboard
 
-**STO Account and Workflow Dashboard**
-
-A Next.js application for managing STO (Special Technical Operations) accounts, workflows, and data ingestion from Google Sheets.
+Production web app for ingesting daily STO data and displaying account/workflow dashboards.
 
 ## Features
 
-- **Authentication**: Email-based authentication with NextAuth.js
-- **Data Ingestion**: Automated import from Google Sheets with mock data fallback  
-- **Escalation Scoring**: Smart algorithms to identify at-risk accounts
-- **Admin Panel**: Manual ingestion triggers and source management
-- **Dashboard**: Account overview, actions tracking, and touch point management
+- **Dashboard**: Escalation queue, owner load distribution, paid accounts overview
+- **Account Management**: Detailed account views with phases, metrics, and stakeholders
+- **Action Tracking**: Kanban board for managing blockers and action items
+- **Workflow Monitoring**: Track workflow progress and ownership
+- **Leaderboard**: Gamified team performance metrics
+- **Data Ingestion**: Automated Google Sheets integration
 
-## Getting Started
+## Tech Stack
 
-### Development Server
+- **Framework**: Next.js 14 (App Router)
+- **Database**: PostgreSQL with Prisma ORM
+- **Auth**: NextAuth with magic links
+- **UI**: Tailwind CSS + shadcn/ui
+- **Charts**: Recharts
+- **Hosting**: Render
 
-```bash
-npm run dev
-```
+## Environment Setup
 
-Open [http://localhost:3000](http://localhost:3000) with your browser.
+1. Copy `.env.example` to `.env.local`
+2. Configure database URL
+3. Set up NextAuth secret
+4. Add Google Service Account credentials
+5. Configure admin emails
 
-### Data Ingestion
-
-```bash
-# Run ingestion with local environment
-npm run ingest:dev
-
-# Production ingestion  
-npm run ingest
-```
-
-### Database Management
+## Local Development
 
 ```bash
-# Generate Prisma client
-npm run prisma:generate
+# Install dependencies
+npm install
 
 # Run database migrations
-npm run prisma:migrate
+npx prisma migrate dev
 
-# Open Prisma Studio
-npm run prisma:studio
+# Seed database
+npx prisma db seed
+
+# Start development server
+npm run dev
+
+# Run data ingestion
+npm run ingest:dev
 ```
 
-## Environment Variables
+## Deployment
 
-Required environment variables:
+### Render Setup
 
-```env
-DATABASE_URL=postgresql://user:password@localhost:5432/forge_os_dev
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-secret-here
-ADMIN_EMAILS=admin@forge-os.com
-ETL_TOKEN=your-etl-token
-USE_MOCK_DATA=true
-```
+1. Create PostgreSQL database
+2. Create Web Service from GitHub repo
+3. Configure environment variables
+4. Set build command: `npm install && npx prisma migrate deploy && npm run build`
+5. Set start command: `npm start`
 
-## Technology Stack
+### Cron Job Setup
 
-- **Framework**: Next.js 15 with App Router
-- **Database**: PostgreSQL with Prisma ORM  
-- **Authentication**: NextAuth.js v5
-- **UI**: Tailwind CSS + shadcn/ui
-- **Data Sources**: Google Sheets API
-- **Deployment**: Render
+Create Render Cron Job for daily ingestion:
+- Command: `npm run ingest`
+- Schedule: `0 13 * * *` (6:30 AM PT)
 
-Built with ❤️ for efficient STO operations management.
+## Data Ingestion
+
+Supports two modes:
+1. **Google Sheets**: Configure service account and sheet IDs
+2. **Mock Data**: Automatically used when Google credentials not configured
+
+## Access Control
+
+- **Viewer**: Default role, read-only access
+- **Admin**: Full access, configured via ADMIN_EMAILS environment variable
+
+## Performance Targets
+
+- Lighthouse Performance Score: ≥85
+- First Contentful Paint: <2.5s
+- Database queries optimized with proper indexes
+
+## Support
+
+For issues or questions, contact the development team.

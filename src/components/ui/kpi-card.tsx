@@ -11,28 +11,21 @@ interface KPICardProps {
   className?: string
 }
 
-export function KPICard({ 
-  title, 
-  value, 
-  delta, 
-  deltaType = "neutral", 
-  description,
-  className 
-}: KPICardProps) {
+export function KPICard({ title, value, delta, deltaType = "neutral", description, className }: KPICardProps) {
   const deltaIcons = {
     positive: ArrowUp,
     negative: ArrowDown,
     neutral: Minus,
   }
-  
+
   const deltaColors = {
     positive: "text-green-600",
     negative: "text-red-600",
     neutral: "text-gray-600",
   }
-  
+
   const DeltaIcon = delta !== undefined ? deltaIcons[deltaType] : null
-  
+
   return (
     <Card className={className}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
