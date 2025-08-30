@@ -1,6 +1,3 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { TrendingUp, Shield, Clock, Target } from "lucide-react"
 
 interface LeaderboardData {
@@ -25,156 +22,227 @@ export function LeaderboardCards({ data }: LeaderboardCardsProps) {
   const top3 = data.slice(0, 3)
   const medals = ["🥇", "🥈", "🥉"]
   
+  const cardStyle = {
+    backgroundColor: 'white',
+    borderRadius: '8px',
+    border: '1px solid #e5e7eb',
+    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+    overflow: 'hidden'
+  }
+
+  const winnerCardStyle = {
+    ...cardStyle,
+    border: '2px solid #eab308'
+  }
+  
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Top Performers */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        gap: '16px'
+      }}>
         {top3.map((person, index) => (
-          <Card key={person.id} className={index === 0 ? "border-yellow-500 border-2" : ""}>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{medals[index]}</span>
-                  <Avatar>
-                    <AvatarFallback>{person.name[0].toUpperCase()}</AvatarFallback>
-                  </Avatar>
+          <div key={person.id} style={index === 0 ? winnerCardStyle : cardStyle}>
+            <div style={{ padding: '24px 24px 16px 24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{ fontSize: '32px' }}>{medals[index]}</span>
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    backgroundColor: '#f3f4f6',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '16px',
+                    fontWeight: '500',
+                    color: '#374151'
+                  }}>
+                    {person.name[0].toUpperCase()}
+                  </div>
                 </div>
-                <Badge variant="outline" className="text-lg font-bold">
+                <span style={{
+                  border: '1px solid #d1d5db',
+                  padding: '4px 12px',
+                  borderRadius: '4px',
+                  fontSize: '16px',
+                  fontWeight: 'bold'
+                }}>
                   {person.metrics.score} pts
-                </Badge>
+                </span>
               </div>
-              <CardTitle>{person.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Actions Closed</span>
-                  <span className="font-medium">{person.metrics.closedActions}</span>
+              <h3 style={{ fontSize: '20px', fontWeight: '600', margin: '0', color: '#111827' }}>
+                {person.name}
+              </h3>
+            </div>
+            <div style={{ padding: '0 24px 24px 24px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#6b7280' }}>Actions Closed</span>
+                  <span style={{ fontWeight: '500', color: '#111827' }}>{person.metrics.closedActions}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Avg DSLT</span>
-                  <span className="font-medium">{person.metrics.avgDslt.toFixed(1)}d</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#6b7280' }}>Avg DSLT</span>
+                  <span style={{ fontWeight: '500', color: '#111827' }}>{person.metrics.avgDslt.toFixed(1)}d</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Green Accounts</span>
-                  <span className="font-medium">{person.metrics.greenAccounts}/{person.metrics.totalAccounts}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <span style={{ color: '#6b7280' }}>Green Accounts</span>
+                  <span style={{ fontWeight: '500', color: '#111827' }}>{person.metrics.greenAccounts}/{person.metrics.totalAccounts}</span>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Category Winners */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-green-600" />
-              <CardTitle className="text-base">Action Hero</CardTitle>
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+        gap: '16px'
+      }}>
+        <div style={cardStyle}>
+          <div style={{ padding: '20px 20px 12px 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <Target style={{ width: '16px', height: '16px', color: '#16a34a' }} />
+              <h4 style={{ fontSize: '16px', fontWeight: '600', margin: '0', color: '#111827' }}>Action Hero</h4>
             </div>
-            <CardDescription>Most actions closed</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+            <p style={{ fontSize: '14px', color: '#6b7280', margin: '0' }}>Most actions closed</p>
+          </div>
+          <div style={{ padding: '0 20px 20px 20px' }}>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827', marginBottom: '4px' }}>
               {data[0]?.name || "—"}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p style={{ fontSize: '12px', color: '#6b7280', margin: '0' }}>
               {data[0]?.metrics.closedActions || 0} actions closed
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-blue-600" />
-              <CardTitle className="text-base">DSLT Champion</CardTitle>
+        <div style={cardStyle}>
+          <div style={{ padding: '20px 20px 12px 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <Clock style={{ width: '16px', height: '16px', color: '#2563eb' }} />
+              <h4 style={{ fontSize: '16px', fontWeight: '600', margin: '0', color: '#111827' }}>DSLT Champion</h4>
             </div>
-            <CardDescription>Best DSLT average</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+            <p style={{ fontSize: '14px', color: '#6b7280', margin: '0' }}>Best DSLT average</p>
+          </div>
+          <div style={{ padding: '0 20px 20px 20px' }}>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827', marginBottom: '4px' }}>
               {data.sort((a, b) => a.metrics.avgDslt - b.metrics.avgDslt)[0]?.name || "—"}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p style={{ fontSize: '12px', color: '#6b7280', margin: '0' }}>
               {data[0]?.metrics.avgDslt.toFixed(1) || 0}d average
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-purple-600" />
-              <CardTitle className="text-base">Sentiment Star</CardTitle>
+        <div style={cardStyle}>
+          <div style={{ padding: '20px 20px 12px 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <TrendingUp style={{ width: '16px', height: '16px', color: '#7c3aed' }} />
+              <h4 style={{ fontSize: '16px', fontWeight: '600', margin: '0', color: '#111827' }}>Sentiment Star</h4>
             </div>
-            <CardDescription>Most green accounts</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+            <p style={{ fontSize: '14px', color: '#6b7280', margin: '0' }}>Most green accounts</p>
+          </div>
+          <div style={{ padding: '0 20px 20px 20px' }}>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827', marginBottom: '4px' }}>
               {data.sort((a, b) => b.metrics.greenAccounts - a.metrics.greenAccounts)[0]?.name || "—"}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p style={{ fontSize: '12px', color: '#6b7280', margin: '0' }}>
               {data[0]?.metrics.greenAccounts || 0} green accounts
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-amber-600" />
-              <CardTitle className="text-base">Risk Manager</CardTitle>
+        <div style={cardStyle}>
+          <div style={{ padding: '20px 20px 12px 20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <Shield style={{ width: '16px', height: '16px', color: '#d97706' }} />
+              <h4 style={{ fontSize: '16px', fontWeight: '600', margin: '0', color: '#111827' }}>Risk Manager</h4>
             </div>
-            <CardDescription>Fewest escalations</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+            <p style={{ fontSize: '14px', color: '#6b7280', margin: '0' }}>Fewest escalations</p>
+          </div>
+          <div style={{ padding: '0 20px 20px 20px' }}>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#111827', marginBottom: '4px' }}>
               {data.sort((a, b) => a.metrics.escalations - b.metrics.escalations)[0]?.name || "—"}
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p style={{ fontSize: '12px', color: '#6b7280', margin: '0' }}>
               {data[0]?.metrics.escalations || 0} escalations
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
       {/* Full Rankings */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Weekly Rankings</CardTitle>
-          <CardDescription>Complete leaderboard for this week</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
+      <div style={cardStyle}>
+        <div style={{ padding: '24px 24px 16px 24px' }}>
+          <h3 style={{ fontSize: '20px', fontWeight: '600', margin: '0 0 4px 0', color: '#111827' }}>
+            Weekly Rankings
+          </h3>
+          <p style={{ fontSize: '14px', color: '#6b7280', margin: '0' }}>
+            Complete leaderboard for this week
+          </p>
+        </div>
+        <div style={{ padding: '0 24px 24px 24px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {data.map((person, index) => (
-              <div key={person.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                <div className="flex items-center gap-3">
-                  <span className="text-lg font-bold text-muted-foreground w-8">
+              <div key={person.id} style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '12px',
+                borderRadius: '8px',
+                backgroundColor: '#f9fafb'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{ 
+                    fontSize: '18px', 
+                    fontWeight: 'bold', 
+                    color: '#6b7280',
+                    width: '32px'
+                  }}>
                     #{index + 1}
                   </span>
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>{person.name[0].toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium">{person.name}</p>
-                    <p className="text-xs text-muted-foreground">{person.email}</p>
+                  <div style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: '#f3f4f6',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '14px',
+                    fontWeight: '500',
+                    color: '#374151'
+                  }}>
+                    {person.name[0].toUpperCase()}
                   </div>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="text-right">
-                    <p className="text-sm font-medium">{person.metrics.score} pts</p>
-                    <p className="text-xs text-muted-foreground">
-                      {person.metrics.totalAccounts} accounts
+                  <div>
+                    <p style={{ fontSize: '16px', fontWeight: '500', margin: '0', color: '#111827' }}>
+                      {person.name}
+                    </p>
+                    <p style={{ fontSize: '12px', color: '#6b7280', margin: '0' }}>
+                      {person.email}
                     </p>
                   </div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <p style={{ fontSize: '14px', fontWeight: '500', margin: '0', color: '#111827' }}>
+                    {person.metrics.score} pts
+                  </p>
+                  <p style={{ fontSize: '12px', color: '#6b7280', margin: '0' }}>
+                    {person.metrics.totalAccounts} accounts
+                  </p>
                 </div>
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }

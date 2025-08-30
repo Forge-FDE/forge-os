@@ -1,14 +1,6 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { Button } from "@/components/ui/button"
 import { X } from "lucide-react"
 
 interface ActionsFiltersProps {
@@ -36,62 +28,84 @@ export function ActionsFilters({ accounts, responsibles }: ActionsFiltersProps) 
   
   const hasFilters = searchParams.toString().length > 0
   
+  const selectStyle = {
+    padding: '8px 12px',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    backgroundColor: 'white',
+    fontSize: '14px',
+    color: '#374151',
+    minWidth: '150px',
+    cursor: 'pointer'
+  }
+  
+  const buttonStyle = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '4px',
+    padding: '8px 12px',
+    backgroundColor: '#f3f4f6',
+    color: '#374151',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    fontSize: '14px',
+    cursor: 'pointer',
+    textDecoration: 'none'
+  }
+  
   return (
-    <div className="flex flex-wrap gap-2">
-      <Select
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
+      <select
+        style={selectStyle}
         value={searchParams.get('severity') || 'all'}
-        onValueChange={(value) => updateFilter('severity', value)}
+        onChange={(e) => updateFilter('severity', e.target.value)}
       >
-        <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="All Severities" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Severities</SelectItem>
-          <SelectItem value="sev-0">SEV-0</SelectItem>
-          <SelectItem value="sev-1">SEV-1</SelectItem>
-          <SelectItem value="sev-2">SEV-2</SelectItem>
-        </SelectContent>
-      </Select>
-      
-      <Select
+        <option value="all">All Severities</option>
+        <option value="sev-0">SEV-0</option>
+        <option value="sev-1">SEV-1</option>
+        <option value="sev-2">SEV-2</option>
+      </select>
+
+      <select
+        style={selectStyle}
         value={searchParams.get('account') || 'all'}
-        onValueChange={(value) => updateFilter('account', value)}
+        onChange={(e) => updateFilter('account', e.target.value)}
       >
-        <SelectTrigger className="w-[200px]">
-          <SelectValue placeholder="All Accounts" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Accounts</SelectItem>
-          {accounts.map((account) => (
-            <SelectItem key={account.id} value={account.id}>
-              {account.name}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      
-      <Select
+        <option value="all">All Accounts</option>
+        {accounts.map(account => (
+          <option key={account.id} value={account.id}>
+            {account.name}
+          </option>
+        ))}
+      </select>
+
+      <select
+        style={selectStyle}
         value={searchParams.get('responsible') || 'all'}
-        onValueChange={(value) => updateFilter('responsible', value)}
+        onChange={(e) => updateFilter('responsible', e.target.value)}
       >
-        <SelectTrigger className="w-[150px]">
-          <SelectValue placeholder="All Owners" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">All Owners</SelectItem>
-          {responsibles.map((person) => (
-            <SelectItem key={person} value={person}>
-              {person}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      
+        <option value="all">All Owners</option>
+        {responsibles.map(responsible => (
+          <option key={responsible} value={responsible}>
+            {responsible}
+          </option>
+        ))}
+      </select>
+
       {hasFilters && (
-        <Button variant="ghost" size="sm" onClick={clearFilters}>
-          <X className="h-4 w-4 mr-1" />
+        <button
+          onClick={clearFilters}
+          style={buttonStyle}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = '#e5e7eb';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = '#f3f4f6';
+          }}
+        >
+          <X style={{ width: '16px', height: '16px' }} />
           Clear
-        </Button>
+        </button>
       )}
     </div>
   )

@@ -49,15 +49,34 @@ export default async function ActionsPage({ searchParams }: PageProps) {
   const responsibles = allActions.map(a => a.responsible).filter(Boolean)
   
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Actions</h1>
-        <p className="text-muted-foreground">
+        <h1 style={{ 
+          fontSize: '30px', 
+          fontWeight: 'bold', 
+          letterSpacing: '-0.025em', 
+          margin: '0 0 8px 0',
+          color: '#111827'
+        }}>
+          Actions
+        </h1>
+        <p style={{ 
+          fontSize: '16px', 
+          color: '#6b7280', 
+          margin: '0' 
+        }}>
           Track and manage all open actions and blockers
         </p>
       </div>
 
-      <Suspense fallback={<div className="h-16 bg-muted rounded-lg animate-pulse" />}>
+      <Suspense fallback={
+        <div style={{ 
+          height: '64px', 
+          backgroundColor: '#f3f4f6', 
+          borderRadius: '8px',
+          animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+        }} />
+      }>
         <ActionsFilters 
           accounts={accounts} 
           responsibles={responsibles} 

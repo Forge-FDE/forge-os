@@ -51,10 +51,22 @@ export default async function LeaderboardPage() {
   }).sort((a, b) => b.metrics.score - a.metrics.score)
   
   return (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Leaderboard</h1>
-        <p className="text-muted-foreground">
+        <h1 style={{ 
+          fontSize: '30px', 
+          fontWeight: 'bold', 
+          letterSpacing: '-0.025em', 
+          margin: '0 0 8px 0',
+          color: '#111827'
+        }}>
+          Leaderboard
+        </h1>
+        <p style={{ 
+          fontSize: '16px', 
+          color: '#6b7280', 
+          margin: '0' 
+        }}>
           Weekly performance metrics and team rankings
         </p>
       </div>
