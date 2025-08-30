@@ -72,35 +72,35 @@ export function PaidAccountsV2({ accounts, compact = false }: PaidAccountsProps)
                   <span style={{ fontSize: '14px', fontWeight: '500', color: '#111827' }}>
                     {account.name}
                   </span>
-                <span style={{ fontSize: '14px', color: '#6b7280' }}>
-                  GM {(account.gm7d * 100).toFixed(0)}%
-                </span>
-              </div>
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: '1fr 1fr 1fr', 
-                gap: '16px', 
-                fontSize: '12px' 
-              }}>
-                <div>
-                  <p style={{ color: '#6b7280', margin: '0' }}>Revenue</p>
-                  <p style={{ fontWeight: '600', margin: '2px 0 0 0' }}>
-                    ${(account.revenue7d / 1000).toFixed(0)}k
-                  </p>
+                  <span style={{ fontSize: '14px', color: '#6b7280' }}>
+                    GM {(account.gm7d * 100).toFixed(0)}%
+                  </span>
                 </div>
-                <div>
-                  <p style={{ color: '#6b7280', margin: '0' }}>Cost</p>
-                  <p style={{ fontWeight: '600', margin: '2px 0 0 0' }}>
-                    ${(account.cost7d / 1000).toFixed(0)}k
-                  </p>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: '1fr 1fr 1fr', 
+                  gap: '16px', 
+                  fontSize: '12px' 
+                }}>
+                  <div>
+                    <p style={{ color: '#6b7280', margin: '0' }}>Revenue</p>
+                    <p style={{ fontWeight: '600', margin: '2px 0 0 0' }}>
+                      ${(account.revenue7d / 1000).toFixed(0)}k
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ color: '#6b7280', margin: '0' }}>Cost</p>
+                    <p style={{ fontWeight: '600', margin: '2px 0 0 0' }}>
+                      ${(account.cost7d / 1000).toFixed(0)}k
+                    </p>
+                  </div>
+                  <div>
+                    <p style={{ color: '#6b7280', margin: '0' }}>GM</p>
+                    <p style={{ fontWeight: '600', margin: '2px 0 0 0' }}>
+                      {(account.gm7d * 100).toFixed(1)}%
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p style={{ color: '#6b7280', margin: '0' }}>GM</p>
-                  <p style={{ fontWeight: '600', margin: '2px 0 0 0' }}>
-                    {(account.gm7d * 100).toFixed(1)}%
-                  </p>
-                </div>
-              </div>
               </div>
             </Link>
           ))}
