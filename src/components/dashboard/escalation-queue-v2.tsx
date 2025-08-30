@@ -4,26 +4,37 @@ import { Phase } from "@prisma/client"
 import Link from "next/link"
 
 interface EscalationQueueProps {
-  accounts: Array<{
+  workflows: Array<{
     id: string
     name: string
     phase: Phase
-    sto: { name: string | null; email: string }
-    dsltDays: number
-    sentiment: string | null
-    blockersOpen: number
-    oldestBlockerAgeD: number
-    nextGateDue: Date | null
-    escalationScore: number
-    escalationState: string
+    dueDate: Date | null
+    wgSentiment: string | null
+    account: {
+      id: string
+      name: string
+      escalationState: string
+      escalationScore: number
+      oldestBlockerAgeD: number
+      nextGateDue: Date | null
+      sentiment: string | null
+    }
+    ownerFde: {
+      id: string
+      name: string | null
+    } | null
+    actions: Array<{
+      id: string
+      severity: string
+      dueDate: Date | null
+      title: string
+    }>
   }>
 }
 
-export function EscalationQueueV2({ accounts }: EscalationQueueProps) {
-  const escalated = accounts
-    .filter(a => a.escalationState !== 'none')
-    .sort((a, b) => b.escalationScore - a.escalationScore)
-    .slice(0, 4)
+export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
+  // Take top 6 escalated workflows
+  const escalatedWorkflows = workflows.slice(0, 6)
   
   const phaseColors = {
     P0_ALIGN: { backgroundColor: '#f3f4f6', color: '#374151' },
@@ -38,7 +49,30 @@ export function EscalationQueueV2({ accounts }: EscalationQueueProps) {
     Y: '#eab308', 
     G: '#22c55e',
   }
-  
+
+  const getSeverityColor = (severity: string) => {
+    switch (severity) {
+      case 'sev-0': return '#dc2626'
+      case 'sev-1': return '#ea580c'
+      case 'sev-2': return '#ca8a04'
+      default: return '#6b7280'
+    }
+  }
+
+  const formatDate = (date: Date | null) => {
+    if (!date) return 'No due date'
+    const now = new Date()
+    const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+    
+    if (diffDays < 0) {
+      return `${Math.abs(diffDays)}d overdue`
+    } else if (diffDays === 0) {
+      return 'Due today'
+    } else {
+      return `${diffDays}d remaining`
+    }
+  }
+
   return (
     <div style={{
       backgroundColor: 'white',
@@ -48,10 +82,7 @@ export function EscalationQueueV2({ accounts }: EscalationQueueProps) {
     }}>
       <div style={{
         padding: '16px 24px',
-        borderBottom: '1px solid #e5e7eb',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
+        borderBottom: '1px solid #e5e7eb'
       }}>
         <h3 style={{
           fontSize: '18px',
@@ -63,99 +94,209 @@ export function EscalationQueueV2({ accounts }: EscalationQueueProps) {
         </h3>
       </div>
       
-      <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead style={{ backgroundColor: '#f9fafb' }}>
-            <tr>
-              <th style={headerStyle}>Account</th>
-              <th style={headerStyle}>Phase</th>
-              <th style={headerStyle}>STO</th>
-              <th style={headerStyle}>DSLT</th>
-              <th style={headerStyle}>Sentiment</th>
-              <th style={headerStyle}>Blocker Age</th>
-              <th style={headerStyle}>Gate Due</th>
-              <th style={headerStyle}>Score</th>
-            </tr>
-          </thead>
-          <tbody style={{ backgroundColor: 'white' }}>
-            {escalated.map((account, index) => {
-              const phaseNum = account.phase.split('_')[0].replace('P', '')
-              const phaseStyle = phaseColors[account.phase as keyof typeof phaseColors] || phaseColors.P0_ALIGN
-              
-              return (
-                <Link key={account.id} href={`/accounts/${account.id}`} style={{ textDecoration: 'none' }}>
-                  <tr style={{
-                    borderBottom: index < escalated.length - 1 ? '1px solid #f3f4f6' : 'none',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#f9fafb';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                  }}>
-                    <td style={cellStyle}>
-                      <span style={{ fontWeight: '500', color: '#111827' }}>{account.name}</span>
-                    </td>
-                  <td style={cellStyle}>
-                    <span style={{
-                      ...phaseStyle,
-                      padding: '2px 8px',
-                      borderRadius: '4px',
-                      fontSize: '12px',
-                      fontWeight: '500'
+      {escalatedWorkflows.length === 0 ? (
+        <div style={{ 
+          padding: '40px 24px', 
+          textAlign: 'center', 
+          color: '#6b7280' 
+        }}>
+          <p>No escalated workflows found</p>
+        </div>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead style={{ backgroundColor: '#f9fafb' }}>
+              <tr>
+                <th style={{
+                  padding: '12px 24px',
+                  textAlign: 'left',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>WORKFLOW</th>
+                <th style={{
+                  padding: '12px 24px',
+                  textAlign: 'left',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>ACCOUNT</th>
+                <th style={{
+                  padding: '12px 24px',
+                  textAlign: 'left',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>PHASE</th>
+                <th style={{
+                  padding: '12px 24px',
+                  textAlign: 'left',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>OWNER</th>
+                <th style={{
+                  padding: '12px 24px',
+                  textAlign: 'center',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>ACTIONS</th>
+                <th style={{
+                  padding: '12px 24px',
+                  textAlign: 'left',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>DUE</th>
+                <th style={{
+                  padding: '12px 24px',
+                  textAlign: 'center',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>SENTIMENT</th>
+                <th style={{
+                  padding: '12px 24px',
+                  textAlign: 'right',
+                  fontSize: '12px',
+                  fontWeight: '500',
+                  color: '#6b7280',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>SCORE</th>
+              </tr>
+            </thead>
+            <tbody style={{ backgroundColor: 'white' }}>
+              {escalatedWorkflows.map((workflow, index) => (
+                <Link key={workflow.id} href={`/accounts/${workflow.account.id}`} style={{ textDecoration: 'none' }}>
+                  <tr 
+                    style={{
+                      borderBottom: index < escalatedWorkflows.length - 1 ? '1px solid #f3f4f6' : 'none',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = '#f9fafb';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'white';
+                    }}
+                  >
+                    <td style={{
+                      padding: '16px 24px',
+                      fontSize: '14px',
+                      fontWeight: '500',
+                      color: '#111827'
                     }}>
-                      {phaseNum}
-                    </span>
-                  </td>
-                  <td style={cellStyle}>
-                    {account.sto.name?.split(' ')[0] || account.sto.email.split('@')[0].toUpperCase()}
-                  </td>
-                  <td style={cellStyle}>
-                    <span style={{ fontWeight: '500' }}>{account.dsltDays}d</span>
-                  </td>
-                  <td style={cellStyle}>
-                    <div style={{
-                      width: '16px',
-                      height: '16px',
-                      borderRadius: '50%',
-                      backgroundColor: sentimentColors[account.sentiment as keyof typeof sentimentColors] || '#6b7280'
-                    }} />
-                  </td>
-                  <td style={cellStyle}>
-                    {account.oldestBlockerAgeD}
-                  </td>
-                  <td style={cellStyle}>
-                    {account.nextGateDue ? `P${phaseNum}-1` : '-'}
-                  </td>
-                    <td style={cellStyle}>
-                      {account.escalationScore}
+                      {workflow.name}
+                    </td>
+                    <td style={{
+                      padding: '16px 24px',
+                      fontSize: '14px',
+                      color: '#6b7280'
+                    }}>
+                      {workflow.account.name}
+                    </td>
+                    <td style={{ padding: '16px 24px' }}>
+                      <span style={{
+                        padding: '2px 8px',
+                        borderRadius: '12px',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        ...phaseColors[workflow.phase]
+                      }}>
+                        {workflow.phase.replace('P', 'P').replace('_', ' ')}
+                      </span>
+                    </td>
+                    <td style={{
+                      padding: '16px 24px',
+                      fontSize: '14px',
+                      color: '#6b7280'
+                    }}>
+                      {workflow.ownerFde?.name || 'Unassigned'}
+                    </td>
+                    <td style={{
+                      padding: '16px 24px',
+                      textAlign: 'center'
+                    }}>
+                      <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
+                        {workflow.actions.slice(0, 3).map((action) => (
+                          <div
+                            key={action.id}
+                            style={{
+                              width: '6px',
+                              height: '6px',
+                              borderRadius: '50%',
+                              backgroundColor: getSeverityColor(action.severity)
+                            }}
+                            title={`${action.severity}: ${action.title}`}
+                          />
+                        ))}
+                        {workflow.actions.length > 3 && (
+                          <span style={{ 
+                            fontSize: '11px', 
+                            color: '#6b7280', 
+                            marginLeft: '4px' 
+                          }}>
+                            +{workflow.actions.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    </td>
+                    <td style={{
+                      padding: '16px 24px',
+                      fontSize: '13px',
+                      color: workflow.dueDate && new Date(workflow.dueDate) < new Date() ? '#dc2626' : '#6b7280'
+                    }}>
+                      {formatDate(workflow.dueDate)}
+                    </td>
+                    <td style={{
+                      padding: '16px 24px',
+                      textAlign: 'center'
+                    }}>
+                      {workflow.wgSentiment && (
+                        <div
+                          style={{
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            backgroundColor: sentimentColors[workflow.wgSentiment as keyof typeof sentimentColors] || '#d1d5db',
+                            margin: '0 auto'
+                          }}
+                        />
+                      )}
+                    </td>
+                    <td style={{
+                      padding: '16px 24px',
+                      textAlign: 'right',
+                      fontSize: '14px',
+                      fontWeight: '600',
+                      color: '#111827'
+                    }}>
+                      {workflow.account.escalationScore}
                     </td>
                   </tr>
                 </Link>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   )
-}
-
-const headerStyle = {
-  padding: '12px 24px',
-  textAlign: 'left' as const,
-  fontSize: '12px',
-  fontWeight: '500',
-  color: '#6b7280',
-  textTransform: 'uppercase' as const,
-  letterSpacing: '0.05em'
-}
-
-const cellStyle = {
-  padding: '16px 24px',
-  whiteSpace: 'nowrap' as const,
-  fontSize: '14px',
-  color: '#111827'
 }
