@@ -26,12 +26,15 @@ export function Sidebar() {
   
   return (
     <div 
-      className="fixed left-0 top-0 h-full w-64 flex flex-col bg-gray-900 text-white z-10"
       style={{ 
         width: '256px', 
         minWidth: '256px',
+        height: '100vh',
         backgroundColor: '#1f2937',
-        color: 'white'
+        color: 'white',
+        display: 'flex',
+        flexDirection: 'column',
+        flexShrink: '0'
       }}
     >
       {/* Logo */}

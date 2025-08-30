@@ -1,21 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { StatusChip } from "@/components/ui/status-chip"
-import { EscalationBadge } from "@/components/ui/escalation-badge"
-import { PhaseIndicator } from "@/components/ui/phase-indicator"
-// import { Sparkline } from "@/components/charts/sparkline" // Temporarily disabled for debugging
 import { ExternalLink } from "lucide-react"
 import { Phase } from "@prisma/client"
 
@@ -31,117 +16,211 @@ interface AccountsTableProps {
       email: string
       role: string
       createdAt: Date
-    }
+    } | null
     sentiment: string | null
-    escalationState: string
-    escalationScore: number
-    volume7d: number
-    revenue7d: number
-    qcPct7d: number
-    automation7d: number
-    blockersOpen: number
-    dsltDays: number
-    actions: Array<{ status: string; severity?: string }>
+    escalationState: string | null
+    dsltDays: number | null
+    blockersOpen: number | null
+    volume7d: number | null
+    revenue7d: number | null
+    qcPct7d: number | null
+    automation7d: number | null
   }>
 }
 
 export function AccountsTable({ accounts }: AccountsTableProps) {
   if (accounts.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>No accounts found</CardTitle>
-          <CardDescription>
-            Try adjusting your filters or run data ingestion
-          </CardDescription>
-        </CardHeader>
-      </Card>
+      <div style={{
+        backgroundColor: 'white',
+        borderRadius: '8px',
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        padding: '24px',
+        textAlign: 'center'
+      }}>
+        <h3 style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 8px 0' }}>No accounts found</h3>
+        <p style={{ fontSize: '14px', color: '#6b7280', margin: '0' }}>
+          Try adjusting your filters or run data ingestion
+        </p>
+      </div>
     )
   }
   
   return (
-    <Card>
-      <CardContent className="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Account</TableHead>
-              <TableHead>Phase</TableHead>
-              <TableHead>STO</TableHead>
-              <TableHead>Health</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Volume (7d)</TableHead>
-              <TableHead className="text-right">Revenue</TableHead>
-              <TableHead className="text-right">QC%</TableHead>
-              <TableHead className="text-right">Auto%</TableHead>
-              <TableHead>Trend</TableHead>
-              <TableHead></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {accounts.map((account) => (
-              <TableRow key={account.id}>
-                <TableCell>
+    <div style={{
+      backgroundColor: 'white',
+      borderRadius: '8px',
+      border: '1px solid #e5e7eb',
+      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+      overflow: 'hidden'
+    }}>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead style={{ backgroundColor: '#f9fafb' }}>
+            <tr>
+              <th style={headerStyle}>Account</th>
+              <th style={headerStyle}>Phase</th>
+              <th style={headerStyle}>STO</th>
+              <th style={headerStyle}>Health</th>
+              <th style={headerStyle}>Status</th>
+              <th style={{...headerStyle, textAlign: 'right'}}>Volume (7d)</th>
+              <th style={{...headerStyle, textAlign: 'right'}}>Revenue</th>
+              <th style={{...headerStyle, textAlign: 'right'}}>QC%</th>
+              <th style={{...headerStyle, textAlign: 'right'}}>Auto%</th>
+              <th style={headerStyle}>Trend</th>
+              <th style={headerStyle}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {accounts.map((account, index) => (
+              <tr key={account.id} style={{
+                borderBottom: index < accounts.length - 1 ? '1px solid #f3f4f6' : 'none'
+              }}>
+                <td style={cellStyle}>
                   <div>
-                    <div className="font-medium">{account.name}</div>
+                    <div style={{ fontWeight: '500' }}>{account.name}</div>
                     {account.codename && (
-                      <div className="text-xs text-muted-foreground">{account.codename}</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280' }}>{account.codename}</div>
                     )}
                   </div>
-                </TableCell>
-                <TableCell>
-                  <PhaseIndicator phase={account.phase} showLabel={false} />
-                </TableCell>
-                <TableCell>{account.sto?.name || account.sto?.email?.split('@')[0] || 'Unknown'}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    <StatusChip sentiment={account.sentiment} size="sm" />
+                </td>
+                <td style={cellStyle}>
+                  <span style={{
+                    backgroundColor: '#dbeafe',
+                    color: '#1d4ed8',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    fontWeight: '500'
+                  }}>
+                    {account.phase.split('_')[0].replace('P', '')}
+                  </span>
+                </td>
+                <td style={cellStyle}>{account.sto?.name || account.sto?.email?.split('@')[0] || 'Unknown'}</td>
+                <td style={cellStyle}>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <div style={{
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      backgroundColor: getSentimentColor(account.sentiment)
+                    }} />
                     {(account.dsltDays || 0) > 2 && (
-                      <Badge variant="outline" className="text-xs">
+                      <span style={{
+                        border: '1px solid #d1d5db',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontSize: '12px'
+                      }}>
                         {account.dsltDays || 0}d DSLT
-                      </Badge>
+                      </span>
                     )}
                     {(account.blockersOpen || 0) > 0 && (
-                      <Badge variant="destructive" className="text-xs">
+                      <span style={{
+                        backgroundColor: '#fecaca',
+                        color: '#991b1b',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontSize: '12px'
+                      }}>
                         {account.blockersOpen || 0} blocker{(account.blockersOpen || 0) > 1 ? 's' : ''}
-                      </Badge>
+                      </span>
                     )}
                   </div>
-                </TableCell>
-                <TableCell>
-                  <EscalationBadge state={account.escalationState || 'none'} showIcon={false} />
-                </TableCell>
-                <TableCell className="text-right">{(account.volume7d || 0).toLocaleString()}</TableCell>
-                <TableCell className="text-right">
+                </td>
+                <td style={cellStyle}>
+                  <span style={{
+                    backgroundColor: getEscalationColor(account.escalationState),
+                    color: 'white',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    fontWeight: '500'
+                  }}>
+                    {getEscalationLabel(account.escalationState)}
+                  </span>
+                </td>
+                <td style={{...cellStyle, textAlign: 'right'}}>{(account.volume7d || 0).toLocaleString()}</td>
+                <td style={{...cellStyle, textAlign: 'right'}}>
                   {(account.revenue7d || 0) > 0 ? `$${((account.revenue7d || 0) / 1000).toFixed(1)}k` : '-'}
-                </TableCell>
-                <TableCell className="text-right">
-                  <span className={(account.qcPct7d || 0) >= 0.99 ? "text-green-600" : "text-amber-600"}>
+                </td>
+                <td style={{...cellStyle, textAlign: 'right'}}>
+                  <span style={{ color: (account.qcPct7d || 0) >= 0.99 ? '#16a34a' : '#d97706' }}>
                     {((account.qcPct7d || 0) * 100).toFixed(1)}%
                   </span>
-                </TableCell>
-                <TableCell className="text-right">
-                  <span className={(account.automation7d || 0) >= 0.3 ? "text-green-600" : ""}>
-                    {((account.automation7d || 0) * 100).toFixed(0)}%
+                </td>
+                <td style={{...cellStyle, textAlign: 'right'}}>
+                  <span style={{ color: (account.automation7d || 0) >= 0.3 ? '#16a34a' : '#111827' }}>
+                    {((account.automation7d || 0) * 100).toFixed(1)}%
                   </span>
-                </TableCell>
-                <TableCell className="w-24">
-                  <div className="text-xs text-muted-foreground">
-                    Chart
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Button asChild size="sm" variant="ghost">
-                    <Link href={`/accounts/${account.id}`}>
-                      <ExternalLink className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                </TableCell>
-              </TableRow>
+                </td>
+                <td style={cellStyle}>Chart</td>
+                <td style={cellStyle}>
+                  <Link 
+                    href={`/accounts/${account.id}`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '32px',
+                      height: '24px',
+                      borderRadius: '4px',
+                      color: '#6b7280',
+                      textDecoration: 'none'
+                    }}
+                  >
+                    <ExternalLink style={{ width: '16px', height: '16px' }} />
+                  </Link>
+                </td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
+}
+
+const headerStyle = {
+  padding: '12px 16px',
+  textAlign: 'left' as const,
+  fontSize: '12px',
+  fontWeight: '500',
+  color: '#6b7280',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.05em'
+}
+
+const cellStyle = {
+  padding: '12px 16px',
+  fontSize: '14px',
+  color: '#111827'
+}
+
+function getSentimentColor(sentiment: string | null) {
+  switch (sentiment) {
+    case 'G': return '#22c55e'
+    case 'Y': return '#eab308'
+    case 'R': return '#ef4444'
+    default: return '#6b7280'
+  }
+}
+
+function getEscalationColor(state: string | null) {
+  switch (state) {
+    case 'escalate': return '#dc2626'
+    case 'watch': return '#d97706'
+    case 'ok': return '#16a34a'
+    default: return '#6b7280'
+  }
+}
+
+function getEscalationLabel(state: string | null) {
+  switch (state) {
+    case 'escalate': return 'Escalate'
+    case 'watch': return 'Watch'
+    case 'ok': return 'OK'
+    default: return 'Unknown'
+  }
 }

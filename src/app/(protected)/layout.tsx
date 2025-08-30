@@ -15,19 +15,23 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: '#f9fafb' }}>
+    <div style={{ 
+      minHeight: '100vh', 
+      backgroundColor: '#f9fafb',
+      display: 'flex',
+      flexDirection: 'row'
+    }}>
       {/* Fixed Sidebar */}
       <Sidebar />
       
-      {/* Main Content Area - offset by sidebar width */}
+      {/* Main Content Area */}
       <div 
         style={{ 
-          marginLeft: '256px', // Offset by sidebar width
+          flex: '1',
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          position: 'relative',
-          top: '0'  // Ensure it starts at the top
+          backgroundColor: '#f9fafb'
         }}
       >
         <TopNav user={session.user} />
@@ -36,15 +40,14 @@ export default async function ProtectedLayout({
             flex: '1',
             backgroundColor: '#f9fafb',
             overflow: 'auto',
-            position: 'relative'
+            padding: '32px 24px'
           }}
         >
           <div 
             style={{ 
               maxWidth: '1280px',
               margin: '0 auto',
-              padding: '32px 24px',
-              minHeight: 'calc(100vh - 64px)' // Account for top nav height
+              width: '100%'
             }}
           >
             {children}

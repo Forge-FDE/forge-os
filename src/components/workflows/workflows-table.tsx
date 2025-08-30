@@ -1,17 +1,4 @@
 import Link from "next/link"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { StatusChip } from "@/components/ui/status-chip"
-import { PhaseIndicator } from "@/components/ui/phase-indicator"
 import { CheckCircle, ExternalLink } from "lucide-react"
 import { Phase } from "@prisma/client"
 
@@ -47,101 +34,188 @@ interface WorkflowsTableProps {
 export function WorkflowsTable({ workflows }: WorkflowsTableProps) {
   if (workflows.length === 0) {
     return (
-      <Card>
-        <CardContent className="p-6 text-center text-sm text-muted-foreground">
-          No workflows found. Workflows will appear after data ingestion.
-        </CardContent>
-      </Card>
+      <div style={{
+        backgroundColor: 'white',
+        borderRadius: '8px',
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        padding: '24px',
+        textAlign: 'center',
+        fontSize: '14px',
+        color: '#6b7280'
+      }}>
+        No workflows found. Workflows will appear after data ingestion.
+      </div>
     )
   }
   
   return (
-    <Card>
-      <CardContent className="p-0">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Workflow</TableHead>
-              <TableHead>Account</TableHead>
-              <TableHead>Phase</TableHead>
-              <TableHead>Owner</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Volume</TableHead>
-              <TableHead className="text-right">QC%</TableHead>
-              <TableHead className="text-right">Auto%</TableHead>
-              <TableHead className="text-right">Budget</TableHead>
-              <TableHead>Health</TableHead>
-              <TableHead>Actions</TableHead>
-              <TableHead></TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {workflows.map((workflow) => (
-              <TableRow key={workflow.id}>
-                <TableCell className="font-medium">{workflow.name}</TableCell>
-                <TableCell>{workflow.account.name}</TableCell>
-                <TableCell>
-                  <PhaseIndicator phase={workflow.phase} showLabel={false} />
-                </TableCell>
-                <TableCell>
+    <div style={{
+      backgroundColor: 'white',
+      borderRadius: '8px',
+      border: '1px solid #e5e7eb',
+      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+      overflow: 'hidden'
+    }}>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead style={{ backgroundColor: '#f9fafb' }}>
+            <tr>
+              <th style={headerStyle}>Workflow</th>
+              <th style={headerStyle}>Account</th>
+              <th style={headerStyle}>Phase</th>
+              <th style={headerStyle}>Owner</th>
+              <th style={headerStyle}>Status</th>
+              <th style={{...headerStyle, textAlign: 'right'}}>Volume</th>
+              <th style={{...headerStyle, textAlign: 'right'}}>QC%</th>
+              <th style={{...headerStyle, textAlign: 'right'}}>Auto%</th>
+              <th style={{...headerStyle, textAlign: 'right'}}>Budget</th>
+              <th style={headerStyle}>Health</th>
+              <th style={headerStyle}>Actions</th>
+              <th style={headerStyle}></th>
+            </tr>
+          </thead>
+          <tbody>
+            {workflows.map((workflow, index) => (
+              <tr key={workflow.id} style={{
+                borderBottom: index < workflows.length - 1 ? '1px solid #f3f4f6' : 'none'
+              }}>
+                <td style={{...cellStyle, fontWeight: '500'}}>{workflow.name}</td>
+                <td style={cellStyle}>{workflow.account.name}</td>
+                <td style={cellStyle}>
+                  <span style={{
+                    backgroundColor: '#dbeafe',
+                    color: '#1d4ed8',
+                    padding: '2px 8px',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    fontWeight: '500'
+                  }}>
+                    {workflow.phase.split('_')[0].replace('P', '')}
+                  </span>
+                </td>
+                <td style={cellStyle}>
                   {workflow.ownerFde 
                     ? workflow.ownerFde.name || workflow.ownerFde.email.split('@')[0]
                     : '-'}
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-1">
+                </td>
+                <td style={cellStyle}>
+                  <div style={{ display: 'flex', gap: '4px' }}>
                     {workflow.golden10 && (
-                      <Badge variant="outline" className="gap-1 text-xs">
-                        <CheckCircle className="h-2 w-2" />
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        border: '1px solid #d1d5db',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontSize: '12px'
+                      }}>
+                        <CheckCircle style={{ width: '8px', height: '8px' }} />
                         G10
-                      </Badge>
+                      </span>
                     )}
                     {workflow.accessReady && (
-                      <Badge variant="outline" className="gap-1 text-xs">
-                        <CheckCircle className="h-2 w-2" />
+                      <span style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        border: '1px solid #d1d5db',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        fontSize: '12px'
+                      }}>
+                        <CheckCircle style={{ width: '8px', height: '8px' }} />
                         Ready
-                      </Badge>
+                      </span>
                     )}
                   </div>
-                </TableCell>
-                <TableCell className="text-right">
+                </td>
+                <td style={{...cellStyle, textAlign: 'right'}}>
                   {workflow.volume7d.toLocaleString()}
-                </TableCell>
-                <TableCell className="text-right">
-                  <span className={workflow.qcPct7d >= 0.99 ? "text-green-600" : "text-amber-600"}>
+                </td>
+                <td style={{...cellStyle, textAlign: 'right'}}>
+                  <span style={{ color: workflow.qcPct7d >= 0.99 ? '#16a34a' : '#d97706' }}>
                     {(workflow.qcPct7d * 100).toFixed(1)}%
                   </span>
-                </TableCell>
-                <TableCell className="text-right">
+                </td>
+                <td style={{...cellStyle, textAlign: 'right'}}>
                   {(workflow.automation7d * 100).toFixed(0)}%
-                </TableCell>
-                <TableCell className="text-right">
-                  <span className={workflow.budgetUtil7d > 0.9 ? "text-red-600" : ""}>
+                </td>
+                <td style={{...cellStyle, textAlign: 'right'}}>
+                  <span style={{ color: workflow.budgetUtil7d > 0.9 ? '#dc2626' : '#111827' }}>
                     {(workflow.budgetUtil7d * 100).toFixed(0)}%
                   </span>
-                </TableCell>
-                <TableCell>
-                  <StatusChip sentiment={workflow.wgSentiment} size="sm" />
-                </TableCell>
-                <TableCell>
+                </td>
+                <td style={cellStyle}>
+                  <div style={{
+                    width: '16px',
+                    height: '16px',
+                    borderRadius: '50%',
+                    backgroundColor: getHealthColor(workflow.wgSentiment)
+                  }} />
+                </td>
+                <td style={cellStyle}>
                   {workflow.actions.length > 0 && (
-                    <Badge variant="destructive" className="text-xs">
+                    <span style={{
+                      backgroundColor: '#fecaca',
+                      color: '#991b1b',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      fontSize: '12px',
+                      fontWeight: '500'
+                    }}>
                       {workflow.actions.length}
-                    </Badge>
+                    </span>
                   )}
-                </TableCell>
-                <TableCell>
-                  <Button asChild size="sm" variant="ghost">
-                    <Link href={`/accounts/${workflow.account.id}`}>
-                      <ExternalLink className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                </TableCell>
-              </TableRow>
+                </td>
+                <td style={cellStyle}>
+                  <Link 
+                    href={`/accounts/${workflow.account.id}`}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '32px',
+                      height: '24px',
+                      borderRadius: '4px',
+                      color: '#6b7280',
+                      textDecoration: 'none'
+                    }}
+                  >
+                    <ExternalLink style={{ width: '16px', height: '16px' }} />
+                  </Link>
+                </td>
+              </tr>
             ))}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
+}
+
+const headerStyle = {
+  padding: '12px 16px',
+  textAlign: 'left' as const,
+  fontSize: '12px',
+  fontWeight: '500',
+  color: '#6b7280',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.05em'
+}
+
+const cellStyle = {
+  padding: '12px 16px',
+  fontSize: '14px',
+  color: '#111827'
+}
+
+function getHealthColor(sentiment: string | null) {
+  switch (sentiment) {
+    case 'G': return '#22c55e'
+    case 'Y': return '#eab308'
+    case 'R': return '#ef4444'
+    default: return '#6b7280'
+  }
 }
