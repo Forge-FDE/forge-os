@@ -1,3 +1,5 @@
+"use client"
+
 import { Phase } from "@prisma/client"
 import Link from "next/link"
 
