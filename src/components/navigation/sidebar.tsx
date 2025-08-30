@@ -27,9 +27,9 @@ export function Sidebar() {
   const pathname = usePathname()
   
   return (
-    <div className="flex h-screen w-64 flex-col bg-gray-900">
+    <div className="flex h-screen w-64 flex-col bg-gray-900 min-w-64 flex-shrink-0" style={{ width: '256px', minWidth: '256px' }}>
       {/* Logo */}
-      <div className="flex h-16 items-center px-6">
+      <div className="flex h-16 items-center px-6 border-b border-gray-800">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded bg-orange-500">
             <span className="text-white font-bold">🔥</span>
