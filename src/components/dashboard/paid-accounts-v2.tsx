@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 // import { LineChart, Line, ResponsiveContainer } from "recharts"
 
@@ -20,6 +20,8 @@ interface PaidAccountsProps {
 }
 
 export function PaidAccountsV2({ accounts, compact = false, title = "Accounts" }: PaidAccountsProps) {
+  const router = useRouter()
+  
   // Show all accounts, not just paid ones
   const displayAccounts = accounts.slice(0, compact ? 3 : 6)
   
@@ -216,20 +218,21 @@ export function PaidAccountsV2({ accounts, compact = false, title = "Accounts" }
           </thead>
           <tbody style={{ backgroundColor: 'white' }}>
             {displayAccounts.map((account, index) => (
-              <Link key={account.id} href={`/accounts/${account.id}`} style={{ textDecoration: 'none' }}>
-                <tr 
-                  style={{
-                    borderBottom: index < displayAccounts.length - 1 ? '1px solid #f3f4f6' : 'none',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#f9fafb';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'white';
-                  }}
-                >
+              <tr 
+                key={account.id}
+                style={{
+                  borderBottom: index < displayAccounts.length - 1 ? '1px solid #f3f4f6' : 'none',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s'
+                }}
+                onClick={() => router.push(`/accounts/${account.id}`)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f9fafb';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'white';
+                }}
+              >
                   <td style={{
                     padding: '16px 24px',
                     whiteSpace: 'nowrap',
@@ -312,7 +315,6 @@ export function PaidAccountsV2({ accounts, compact = false, title = "Accounts" }
                     </div>
                   </td>
                 </tr>
-              </Link>
             ))}
           </tbody>
         </table>
