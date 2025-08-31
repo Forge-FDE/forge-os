@@ -1,7 +1,7 @@
 "use client"
 
 import { Phase } from "@prisma/client"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface EscalationQueueProps {
   workflows: Array<{
@@ -33,6 +33,8 @@ interface EscalationQueueProps {
 }
 
 export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
+  const router = useRouter()
+  
   // Take top 6 escalated workflows
   const escalatedWorkflows = workflows.slice(0, 6)
   
@@ -178,20 +180,21 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
             </thead>
             <tbody style={{ backgroundColor: 'white' }}>
               {escalatedWorkflows.map((workflow, index) => (
-                <Link key={workflow.id} href={`/workflows/${workflow.id}`} style={{ textDecoration: 'none' }}>
-                  <tr 
-                    style={{
-                      borderBottom: index < escalatedWorkflows.length - 1 ? '1px solid #f3f4f6' : 'none',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.2s'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#f9fafb';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = 'white';
-                    }}
-                  >
+                <tr 
+                  key={workflow.id}
+                  style={{
+                    borderBottom: index < escalatedWorkflows.length - 1 ? '1px solid #f3f4f6' : 'none',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s'
+                  }}
+                  onClick={() => router.push(`/workflows/${workflow.id}`)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = '#f9fafb';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'white';
+                  }}
+                >
                     <td style={{ padding: '12px', fontSize: '14px', fontWeight: '500', color: '#111827' }}>
                       {workflow.name}
                     </td>
@@ -257,7 +260,6 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       {workflow.account.escalationScore}
                     </td>
                   </tr>
-                </Link>
               ))}
             </tbody>
           </table>
