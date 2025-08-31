@@ -52,8 +52,8 @@ export function PaidAccountsV2({ accounts, compact = false, title = "Accounts" }
         </div>
         <div style={{ padding: '24px' }}>
           {displayAccounts.map((account) => (
-            <Link key={account.id} href={`/accounts/${account.id}`} style={{ textDecoration: 'none' }}>
               <div 
+                key={account.id}
                 style={{ 
                   marginBottom: '16px',
                   padding: '12px',
@@ -61,6 +61,7 @@ export function PaidAccountsV2({ accounts, compact = false, title = "Accounts" }
                   cursor: 'pointer',
                   transition: 'background-color 0.2s'
                 }}
+                onClick={() => router.push(`/accounts/${account.id}`)}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = '#f9fafb';
                 }}
@@ -107,7 +108,6 @@ export function PaidAccountsV2({ accounts, compact = false, title = "Accounts" }
                   </div>
                 </div>
               </div>
-            </Link>
           ))}
         </div>
       </div>

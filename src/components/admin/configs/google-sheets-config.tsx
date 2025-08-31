@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Plus, Trash2, Edit2, Save, X } from "lucide-react"
+import { Plus, Trash2, Save, X } from "lucide-react"
 
 interface IngestionSource {
   id: string

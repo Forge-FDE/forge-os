@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { IngestionTrigger } from "@/components/admin/ingestion-trigger"
 import { IngestionSourcesList } from "@/components/admin/ingestion-sources-list"
 import Link from "next/link"
-import { Settings, Cog } from "lucide-react"
+import { Settings } from "lucide-react"
 
 export default async function AdminPage() {
   const session = await auth()
