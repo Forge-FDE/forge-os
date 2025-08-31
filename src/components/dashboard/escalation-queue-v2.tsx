@@ -106,15 +106,15 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
         <div style={{ overflowX: 'auto', width: '100%' }}>
           <table style={{ 
             width: '100%', 
-            minWidth: '1000px',
+            minWidth: '1200px',
             borderCollapse: 'collapse', 
             tableLayout: 'fixed' 
           }}>
             <colgroup>
-              <col style={{ width: '200px' }} />
-              <col style={{ width: '150px' }} />
-              <col style={{ width: '100px' }} />
+              <col style={{ width: '180px' }} />
+              <col style={{ width: '140px' }} />
               <col style={{ width: '120px' }} />
+              <col style={{ width: '140px' }} />
               <col style={{ width: '100px' }} />
               <col style={{ width: '120px' }} />
               <col style={{ width: '100px' }} />
@@ -213,10 +213,11 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                     }}
                   >
                     <td style={{
-                      padding: '16px 16px',
+                      padding: '12px 16px',
                       fontSize: '14px',
                       fontWeight: '500',
                       color: '#111827',
+                      textAlign: 'left',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis'
@@ -224,16 +225,20 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       {workflow.name}
                     </td>
                     <td style={{
-                      padding: '16px 16px',
+                      padding: '12px 16px',
                       fontSize: '14px',
                       color: '#6b7280',
+                      textAlign: 'left',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis'
                     }}>
                       {workflow.account.name}
                     </td>
-                    <td style={{ padding: '16px 16px' }}>
+                    <td style={{ 
+                      padding: '12px 16px',
+                      textAlign: 'left'
+                    }}>
                       <span style={{
                         padding: '2px 6px',
                         borderRadius: '12px',
@@ -246,9 +251,10 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       </span>
                     </td>
                     <td style={{
-                      padding: '16px 16px',
+                      padding: '12px 16px',
                       fontSize: '14px',
                       color: '#6b7280',
+                      textAlign: 'left',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis'
@@ -256,7 +262,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       {workflow.ownerFde?.name || 'Unassigned'}
                     </td>
                     <td style={{
-                      padding: '16px 16px',
+                      padding: '12px 16px',
                       textAlign: 'center'
                     }}>
                       <div style={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
@@ -284,15 +290,16 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       </div>
                     </td>
                     <td style={{
-                      padding: '16px 16px',
+                      padding: '12px 16px',
                       fontSize: '12px',
                       color: workflow.dueDate && new Date(workflow.dueDate) < new Date() ? '#dc2626' : '#6b7280',
+                      textAlign: 'left',
                       whiteSpace: 'nowrap'
                     }}>
                       {formatDate(workflow.dueDate)}
                     </td>
                     <td style={{
-                      padding: '16px 16px',
+                      padding: '12px 16px',
                       textAlign: 'center'
                     }}>
                       {workflow.wgSentiment && (
@@ -308,7 +315,7 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       )}
                     </td>
                     <td style={{
-                      padding: '16px 16px',
+                      padding: '12px 16px',
                       textAlign: 'right',
                       fontSize: '14px',
                       fontWeight: '600',
