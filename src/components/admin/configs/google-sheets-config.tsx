@@ -20,7 +20,7 @@ interface GoogleSheetsConfigProps {
 export function GoogleSheetsConfig({ sources: initialSources }: GoogleSheetsConfigProps) {
   const [sources, setSources] = useState(initialSources)
   const [isAddingNew, setIsAddingNew] = useState(false)
-  const [editingId, setEditingId] = useState<string | null>(null)
+
   const [newSource, setNewSource] = useState({
     accountName: '',
     spreadsheetId: '',
@@ -44,7 +44,7 @@ export function GoogleSheetsConfig({ sources: initialSources }: GoogleSheetsConf
         setNewSource({ accountName: '', spreadsheetId: '', tab: '', active: true })
         setIsAddingNew(false)
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to add source:', error)
     }
   }
@@ -58,7 +58,7 @@ export function GoogleSheetsConfig({ sources: initialSources }: GoogleSheetsConf
       if (response.ok) {
         setSources(prev => prev.filter(s => s.id !== id))
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to delete source:', error)
     }
   }
@@ -76,7 +76,7 @@ export function GoogleSheetsConfig({ sources: initialSources }: GoogleSheetsConf
           s.id === id ? { ...s, active: !active } : s
         ))
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Failed to update source:', error)
     }
   }
