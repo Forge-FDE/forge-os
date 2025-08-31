@@ -107,92 +107,113 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
           <table style={{ 
             width: '100%', 
             minWidth: '1200px',
-            borderCollapse: 'collapse', 
-            tableLayout: 'fixed' 
+            borderCollapse: 'collapse'
           }}>
-            <colgroup>
-              <col style={{ width: '180px' }} />
-              <col style={{ width: '140px' }} />
-              <col style={{ width: '120px' }} />
-              <col style={{ width: '140px' }} />
-              <col style={{ width: '100px' }} />
-              <col style={{ width: '120px' }} />
-              <col style={{ width: '100px' }} />
-              <col style={{ width: '100px' }} />
-            </colgroup>
             <thead style={{ backgroundColor: '#f9fafb' }}>
               <tr>
                 <th style={{
+                  width: '180px',
+                  minWidth: '180px',
+                  maxWidth: '180px',
                   padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
                   color: '#6b7280',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
+                  letterSpacing: '0.05em',
+                  whiteSpace: 'nowrap'
                 }}>WORKFLOW</th>
                 <th style={{
+                  width: '140px',
+                  minWidth: '140px',
+                  maxWidth: '140px',
                   padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
                   color: '#6b7280',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
+                  letterSpacing: '0.05em',
+                  whiteSpace: 'nowrap'
                 }}>ACCOUNT</th>
                 <th style={{
+                  width: '120px',
+                  minWidth: '120px',
+                  maxWidth: '120px',
                   padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
                   color: '#6b7280',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
+                  letterSpacing: '0.05em',
+                  whiteSpace: 'nowrap'
                 }}>PHASE</th>
                 <th style={{
+                  width: '140px',
+                  minWidth: '140px',
+                  maxWidth: '140px',
                   padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
                   color: '#6b7280',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
+                  letterSpacing: '0.05em',
+                  whiteSpace: 'nowrap'
                 }}>OWNER</th>
                 <th style={{
+                  width: '100px',
+                  minWidth: '100px',
+                  maxWidth: '100px',
                   padding: '12px 16px',
                   textAlign: 'center',
                   fontSize: '12px',
                   fontWeight: '500',
                   color: '#6b7280',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
+                  letterSpacing: '0.05em',
+                  whiteSpace: 'nowrap'
                 }}>ACTIONS</th>
                 <th style={{
+                  width: '120px',
+                  minWidth: '120px',
+                  maxWidth: '120px',
                   padding: '12px 16px',
                   textAlign: 'left',
                   fontSize: '12px',
                   fontWeight: '500',
                   color: '#6b7280',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
+                  letterSpacing: '0.05em',
+                  whiteSpace: 'nowrap'
                 }}>DUE</th>
                 <th style={{
+                  width: '100px',
+                  minWidth: '100px',
+                  maxWidth: '100px',
                   padding: '12px 16px',
                   textAlign: 'center',
                   fontSize: '12px',
                   fontWeight: '500',
                   color: '#6b7280',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
+                  letterSpacing: '0.05em',
+                  whiteSpace: 'nowrap'
                 }}>SENTIMENT</th>
                 <th style={{
+                  width: '100px',
+                  minWidth: '100px',
+                  maxWidth: '100px',
                   padding: '12px 16px',
                   textAlign: 'right',
                   fontSize: '12px',
                   fontWeight: '500',
                   color: '#6b7280',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.05em'
+                  letterSpacing: '0.05em',
+                  whiteSpace: 'nowrap'
                 }}>SCORE</th>
               </tr>
             </thead>
@@ -213,6 +234,9 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                     }}
                   >
                     <td style={{
+                      width: '180px',
+                      minWidth: '180px',
+                      maxWidth: '180px',
                       padding: '12px 16px',
                       fontSize: '14px',
                       fontWeight: '500',
@@ -225,6 +249,9 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       {workflow.name}
                     </td>
                     <td style={{
+                      width: '140px',
+                      minWidth: '140px',
+                      maxWidth: '140px',
                       padding: '12px 16px',
                       fontSize: '14px',
                       color: '#6b7280',
@@ -236,6 +263,9 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       {workflow.account.name}
                     </td>
                     <td style={{ 
+                      width: '120px',
+                      minWidth: '120px',
+                      maxWidth: '120px',
                       padding: '12px 16px',
                       textAlign: 'left'
                     }}>
@@ -251,6 +281,9 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       </span>
                     </td>
                     <td style={{
+                      width: '140px',
+                      minWidth: '140px',
+                      maxWidth: '140px',
                       padding: '12px 16px',
                       fontSize: '14px',
                       color: '#6b7280',
@@ -262,6 +295,9 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       {workflow.ownerFde?.name || 'Unassigned'}
                     </td>
                     <td style={{
+                      width: '100px',
+                      minWidth: '100px',
+                      maxWidth: '100px',
                       padding: '12px 16px',
                       textAlign: 'center'
                     }}>
@@ -290,6 +326,9 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       </div>
                     </td>
                     <td style={{
+                      width: '120px',
+                      minWidth: '120px',
+                      maxWidth: '120px',
                       padding: '12px 16px',
                       fontSize: '12px',
                       color: workflow.dueDate && new Date(workflow.dueDate) < new Date() ? '#dc2626' : '#6b7280',
@@ -299,6 +338,9 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       {formatDate(workflow.dueDate)}
                     </td>
                     <td style={{
+                      width: '100px',
+                      minWidth: '100px',
+                      maxWidth: '100px',
                       padding: '12px 16px',
                       textAlign: 'center'
                     }}>
@@ -315,6 +357,9 @@ export function EscalationQueueV2({ workflows }: EscalationQueueProps) {
                       )}
                     </td>
                     <td style={{
+                      width: '100px',
+                      minWidth: '100px',
+                      maxWidth: '100px',
                       padding: '12px 16px',
                       textAlign: 'right',
                       fontSize: '14px',
