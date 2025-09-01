@@ -9,35 +9,35 @@ export default function VerifyRequestPage() {
     >
       {/* Left Panel - Branding */}
       <div 
-        className="hidden lg:flex lg:flex-1 lg:flex-col lg:justify-center lg:px-8"
+        className="hidden lg:flex lg:w-2/5 lg:flex-col lg:justify-center lg:px-12"
         style={{ backgroundColor: '#1f2937' }}
       >
-        <div className="mx-auto max-w-md text-center">
+        <div className="mx-auto max-w-sm">
           {/* Logo */}
-          <div className="flex items-center justify-center mb-8">
+          <div className="flex items-center mb-8">
             <div 
-              className="flex items-center justify-center w-16 h-16 rounded-xl mr-4"
+              className="flex items-center justify-center w-12 h-12 rounded-lg mr-3"
               style={{ backgroundColor: '#f97316' }}
             >
-              <span className="text-white text-2xl font-bold">F</span>
+              <span className="text-white text-xl font-bold">F</span>
             </div>
-            <h1 className="text-4xl font-bold text-white">FORGE</h1>
+            <h1 className="text-3xl font-bold text-white">FORGE</h1>
           </div>
           
-          <h2 className="text-xl text-gray-300 mb-6">
+          <h2 className="text-lg text-gray-300 mb-4">
             STO Account Management Platform
           </h2>
-          <p className="text-gray-400 leading-relaxed">
+          <p className="text-gray-400 leading-relaxed text-sm">
             Check your email to complete the secure sign-in process.
           </p>
         </div>
       </div>
 
       {/* Right Panel - Verify Request */}
-      <div className="flex flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="mx-auto w-full max-w-sm">
+      <div className="flex flex-1 flex-col justify-center px-8 py-12 lg:px-16">
+        <div className="mx-auto w-full max-w-md">
           {/* Mobile Logo */}
-          <div className="flex items-center justify-center mb-8 lg:hidden">
+          <div className="flex items-center justify-center mb-12 lg:hidden">
             <div 
               className="flex items-center justify-center w-12 h-12 rounded-lg mr-3"
               style={{ backgroundColor: '#f97316' }}
@@ -47,23 +47,27 @@ export default function VerifyRequestPage() {
             <h1 className="text-2xl font-bold text-gray-900">FORGE</h1>
           </div>
 
-          <Card className="shadow-xl border-0">
-            <CardHeader className="space-y-1 text-center pb-8">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-50">
-                <CheckCircle className="h-8 w-8 text-green-500" />
-              </div>
-              <CardTitle className="text-2xl font-bold text-gray-900">Check your email</CardTitle>
-              <CardDescription className="text-gray-600">
-                A secure sign-in link has been sent to your email address
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="text-center pb-8">
-              <div className="space-y-4 text-gray-600">
-                <div className="flex items-center justify-center p-4 bg-gray-50 rounded-lg">
-                  <Mail className="h-5 w-5 mr-3" style={{ color: '#f97316' }} />
-                  <p className="text-sm">Click the link in your email to sign in to Forge OS</p>
+          <div className="text-center mb-8">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
+              <CheckCircle className="h-10 w-10 text-green-500" />
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-3">Check your email</h1>
+            <p className="text-gray-600 text-lg">
+              A secure sign-in link has been sent to your email address
+            </p>
+          </div>
+
+          <Card className="shadow-lg border border-gray-200">
+            <CardContent className="p-8">
+              <div className="space-y-6 text-gray-600">
+                <div className="flex items-start p-6 bg-gray-50 rounded-lg">
+                  <Mail className="h-6 w-6 mr-4 mt-1 flex-shrink-0" style={{ color: '#f97316' }} />
+                  <div>
+                    <p className="font-semibold text-gray-800 mb-2">Check your email</p>
+                    <p className="text-sm">Click the link in your email to sign in to Forge OS</p>
+                  </div>
                 </div>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 text-center">
                   You can close this window after clicking the email link.
                 </p>
               </div>
